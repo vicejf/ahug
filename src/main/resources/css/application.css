@@ -1,0 +1,301 @@
+/* NC5代码生成器 - JavaFX样式表 */
+
+/* ==================== 全局样式 ==================== */
+.root {
+    -fx-font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+    -fx-font-size: 13px;
+}
+
+/* ==================== 主窗口样式 ==================== */
+.main-tab-pane {
+    -fx-tab-min-height: 36px;
+    -fx-tab-max-height: 36px;
+}
+
+.main-tab-pane .tab-header-area {
+    -fx-background-color: #f5f5f5;
+}
+
+.main-tab-pane .tab {
+    -fx-background-color: #e0e0e0;
+    -fx-padding: 8px 16px;
+}
+
+.main-tab-pane .tab:selected {
+    -fx-background-color: #2196F3;
+}
+
+.main-tab-pane .tab:selected .tab-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* ==================== 工具栏样式 ==================== */
+.tool-bar {
+    -fx-background-color: #fafafa;
+    -fx-padding: 8px;
+    -fx-spacing: 8px;
+}
+
+.tool-button {
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 6px 12px;
+    -fx-cursor: hand;
+}
+
+.tool-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.primary-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.primary-button:hover {
+    -fx-background-color: #1976D2;
+}
+
+/* ==================== 状态栏样式 ==================== */
+.status-bar {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 5px 10px;
+}
+
+.status-bar .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666;
+}
+
+/* ==================== 表单样式 ==================== */
+.field-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.hint-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #888;
+    -fx-font-style: italic;
+}
+
+.info-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2196F3;
+}
+
+/* ==================== 必填项样式 ==================== */
+.required-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* 必填项星号 */
+.required-label .required-star {
+    -fx-text-fill: #ff4d4f;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* 必填项输入框 - 默认状态 */
+.required-field {
+    -fx-background-color: white;
+    -fx-border-color: #d9d9d9;
+    -fx-border-radius: 3px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 6px;
+}
+
+/* 必填项输入框 - 聚焦状态 */
+.required-field:focused {
+    -fx-border-color: #2196F3;
+    -fx-background-color: #f0f7ff;
+}
+
+/* 必填项输入框 - 错误状态(空值) */
+.required-field.error {
+    -fx-border-color: #ff4d4f;
+    -fx-background-color: #fff2f0;
+    -fx-border-width: 2px;
+}
+
+/* 必填项输入框 - 错误且聚焦 */
+.required-field.error:focused {
+    -fx-border-color: #ff4d4f;
+    -fx-background-color: #fff1f0;
+}
+
+/* ==================== 文本框样式 ==================== */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3px;
+    -fx-padding: 6px;
+}
+
+.text-field:focused {
+    -fx-border-color: #2196F3;
+}
+
+/* ==================== 表格样式 ==================== */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f5f5f5;
+    -fx-font-weight: bold;
+    -fx-padding: 8px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f5f5f5;
+}
+
+.table-row-cell {
+    -fx-cell-size: 32px;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #bbdefb;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+/* 必填列样式增强 */
+.table-view .table-column {
+    -fx-alignment: CENTER;
+}
+
+/* 必填列标题特殊样式 */
+.table-view .required-column-header {
+    -fx-text-fill: #ff4d4f;
+    -fx-font-weight: bold;
+}
+
+/* 必填单元格样式 */
+.table-view .required-cell-true {
+    -fx-background-color: #fff2f0;
+    -fx-text-fill: #cf1322;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected .required-cell-true {
+    -fx-background-color: #ffccc7;
+}
+
+/* ==================== AutoSaveTableCell 状态样式 ==================== */
+
+/* 编辑中状态 - 黄色背景 */
+.cell-editing {
+    -fx-background-color: #fffbe6;
+    -fx-border-color: #ffd666;
+}
+
+/* 保存中状态 - 蓝色背景 */
+.cell-saving {
+    -fx-background-color: #e6f4ff;
+    -fx-border-color: #91caff;
+}
+
+/* 错误状态 - 红色背景 */
+.cell-error {
+    -fx-background-color: #ffe6e6;
+    -fx-border-color: #ff7875;
+    -fx-text-fill: #ff4d4f;
+}
+
+/* ==================== 分组面板样式 ==================== */
+.titled-pane {
+    -fx-background-color: transparent;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #f5f5f5;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+.titled-pane > .content {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 1px 1px 1px;
+}
+
+/* ==================== 代码预览样式 ==================== */
+.code-preview {
+    -fx-font-family: "Consolas", "Monaco", "Courier New", monospace;
+    -fx-font-size: 12px;
+    -fx-background-color: #fafafa;
+}
+
+.section-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.file-name-label {
+    -fx-text-fill: #2196F3;
+    -fx-font-weight: bold;
+}
+
+/* ==================== 日志区域样式 ==================== */
+.log-area {
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 11px;
+    -fx-background-color: #fafafa;
+}
+
+/* ==================== 树形视图样式 ==================== */
+.tree-view {
+    -fx-background-color: white;
+}
+
+.tree-cell {
+    -fx-padding: 4px;
+}
+
+.tree-cell:selected {
+    -fx-background-color: #bbdefb;
+}
+
+/* ==================== 进度条样式 ==================== */
+.progress-bar {
+    -fx-accent: #2196F3;
+}
+
+/* ==================== 复选框样式 ==================== */
+.check-box {
+    -fx-padding: 4px;
+}
+
+/* ==================== 下拉框样式 ==================== */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3px;
+}
+
+.combo-box:focused {
+    -fx-border-color: #2196F3;
+}
+
+/* ==================== 菜单栏样式 ==================== */
+.menu-bar {
+    -fx-background-color: #f5f5f5;
+}
+
+.menu-item:focused {
+    -fx-background-color: #2196F3;
+}
+
+/* ==================== 标签页内容区域 ==================== */
+.basic-info-tab, .fields-tab, .generate-tab {
+    -fx-background-color: white;
+}

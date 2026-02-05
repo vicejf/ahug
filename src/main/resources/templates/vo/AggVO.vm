@@ -1,0 +1,87 @@
+package nc.vo.${bill.packageName}.${bill.classNameLower};
+
+import java.io.Serializable;
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+
+/**
+ * $bill.billName - 聚合VO
+ * @author $bill.author
+ * @since $year
+ */
+public class Agg${bill.className}VO extends AggregatedValueObject implements Serializable {
+
+    private static final long serialVersionUID = ${bill.className.hashCode()}L;
+
+    /**
+     * 表头VO
+     */
+    public static final String PARENT = "ParentVO";
+
+#if($bill.bodyCodeList.size() > 0)
+#foreach($bodyCode in $bill.bodyCodeList)
+    /**
+     * $bodyCode
+     */
+    public static final String CHILD_${bodyCode} = "${bodyCode}VO";
+
+#end
+#else
+    /**
+     * 表体VO
+     */
+    public static final String CHILD = "ChildrenVO";
+
+#end
+
+    public Agg${bill.className}VO() {
+        super();
+    }
+
+    /**
+     * 获取表头VO
+     */
+    public ${bill.className}HVO getParentVO() {
+        return (${bill.className}HVO) getParent();
+    }
+
+    /**
+     * 设置表头VO
+     */
+    public void setParentVO(${bill.className}HVO parent) {
+        setParent(parent);
+    }
+
+#if($bill.bodyCodeList.size() > 0)
+#foreach($bodyCode in $bill.bodyCodeList)
+    /**
+     * 获取$bodyCode表体VO数组
+     */
+    public ${bodyCode}VO[] get${bodyCode}VO() {
+        return (${bodyCode}VO[]) getChildren(${bodyCode}VO.class);
+    }
+
+    /**
+     * 设置$bodyCode表体VO数组
+     */
+    public void set${bodyCode}VO(${bodyCode}VO[] children) {
+        setChildren(children);
+    }
+
+#end
+#else
+    /**
+     * 获取表体VO数组
+     */
+    public ${bill.bodyCode}VO[] getChildrenVO() {
+        return (${bill.bodyCode}VO[]) getChildren(${bill.bodyCode}VO.class);
+    }
+
+    /**
+     * 设置表体VO数组
+     */
+    public void setChildrenVO(${bill.bodyCode}VO[] children) {
+        setChildren(children);
+    }
+#end
+}

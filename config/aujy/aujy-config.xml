@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<billConfig>
+    <basicInfo>
+        <!-- 单据基本信息 -->
+        <billCode>AUJY</billCode>
+        <billName>CESHI2</billName>
+        <module></module>
+        <packageName></packageName>
+        <bodyCode></bodyCode>
+        <billType>single</billType>
+        <description></description>
+    </basicInfo>
+    <fieldPaths>
+        <!-- 字段配置文件路径 -->
+        <headFieldsPath>AUJY.json</headFieldsPath>
+        <bodyFieldsPath>AUJYBVO.json</bodyFieldsPath>
+    </fieldPaths>
+    <globalConfig>
+        <generateOptions>
+            <!-- 代码生成选项 -->
+            <generateClient>true</generateClient>
+            <generateBusiness>true</generateBusiness>
+            <generateMetadata>false</generateMetadata>
+            <syncAfterGenerate>true</syncAfterGenerate>
+        </generateOptions>
+        <metadataSwitches>
+            <!-- 元数据生成开关 -->
+            <enablePubBillInterface>true</enablePubBillInterface>
+            <enableUser>true</enableUser>
+            <enableBillStatus>true</enableBillStatus>
+        </metadataSwitches>
+        <metadataIds>
+            <!-- 元数据字段ID -->
+            <componentId></componentId>
+            <mainEntityId></mainEntityId>
+            <pkFieldId></pkFieldId>
+            <billNoFieldId></billNoFieldId>
+            <corpFieldId></corpFieldId>
+            <busiTypeFieldId></busiTypeFieldId>
+            <operatorIdFieldId></operatorIdFieldId>
+            <approverFieldId></approverFieldId>
+            <billStatusFieldId></billStatusFieldId>
+            <approveNoteFieldId></approveNoteFieldId>
+            <approveDateFieldId></approveDateFieldId>
+            <billDateFieldId></billDateFieldId>
+            <billTypeFieldId></billTypeFieldId>
+        </metadataIds>
+        <referenceIds>
+            <!-- 参照模型ID -->
+            <refPubBillId></refPubBillId>
+            <refUserId></refUserId>
+            <refBillStatusId></refBillStatusId>
+        </referenceIds>
+        <connectionIds>
+            <!-- 连接ID -->
+            <connectionPubBillId></connectionPubBillId>
+            <connectionUserId></connectionUserId>
+            <connectionBillStatusId></connectionBillStatusId>
+        </connectionIds>
+    </globalConfig>
+</billConfig>

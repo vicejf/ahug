@@ -1,0 +1,90 @@
+[
+  {
+    "name": "pk_org",
+    "label": "组织",
+    "type": "String",
+    "dbType": "VARCHAR2(20)",
+    "length": 20,
+    "uiType": "Text",
+    "required": true,
+    "primaryKey": true,
+    "editable": false
+  },
+  {
+    "name": "billno",
+    "label": "单据号",
+    "type": "String",
+    "dbType": "VARCHAR2(50)",
+    "length": 50,
+    "uiType": "Text",
+    "required": true,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "billdate",
+    "label": "单据日期",
+    "type": "Date",
+    "dbType": "DATE",
+    "length": 0,
+    "uiType": "Date",
+    "required": true,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "maker",
+    "label": "制单人",
+    "type": "String",
+    "dbType": "VARCHAR2(50)",
+    "length": 50,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "makedate",
+    "label": "制单日期",
+    "type": "Date",
+    "dbType": "DATE",
+    "length": 0,
+    "uiType": "Date",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "approver",
+    "label": "审批人",
+    "type": "String",
+    "dbType": "VARCHAR2(50)",
+    "length": 50,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "approvedate",
+    "label": "审批日期",
+    "type": "Date",
+    "dbType": "DATE",
+    "length": 0,
+    "uiType": "Date",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "bz",
+    "label": "备注",
+    "type": "String",
+    "dbType": "VARCHAR2(500)",
+    "length": 500,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  }
+]

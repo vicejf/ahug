@@ -1,0 +1,51 @@
+package nc.bs.pub.action;
+
+import java.util.Hashtable;
+
+import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.dygpubapp.appframe.exception.ExceptionUtils;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.compiler.PfParameterVO;
+
+/**
+ * ${bill.billName} - 取消冻结动作
+ * @author ${bill.author}
+ * @since ${year}
+ */
+public class N_${bill.className}_UNFREEZE extends AbstractCompiler2 {
+
+	private Hashtable<Object, Object> m_methodReturnHas = new Hashtable<Object, Object>();
+	private Hashtable<Object, Object> m_keyHas = null;
+
+	public N_${bill.className}_UNFREEZE() {
+		super();
+	}
+
+	@Override
+	public String getCodeRemark() {
+		return "\n";
+	}
+
+	@Override
+	public Object runComClass(PfParameterVO vo) throws BusinessException {
+		try {
+			super.m_tmpVo = vo;
+			setParameter("VO", getVo());
+			Object retObj = runClass("nc.bs.ahu.pub.BillUNFREEZE", "unFreezeBill",
+					"nc.vo.pub.AggregatedValueObject:01", vo, m_keyHas, m_methodReturnHas);
+			return retObj;
+		} catch (Exception ex) {
+			ExceptionUtils.marsh(ex);
+		}
+		return null;
+	}
+
+	private void setParameter(String key, Object val) {
+		if (m_keyHas == null) {
+			m_keyHas = new Hashtable<Object, Object>();
+		}
+		if (val != null) {
+			m_keyHas.put(key, val);
+		}
+	}
+}

@@ -1,0 +1,47 @@
+package nc.ui.${bill.packageName}.${bill.classNameLower};
+
+import java.util.Hashtable;
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.${bill.packageName}.${bill.classNameLower}.I${bill.className}Server;
+import nc.ui.trade.bsdelegate.BDBusinessDelegator;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bill.className}VO;
+import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFBoolean;
+
+public class ${bill.className}Delegator extends BDBusinessDelegator {
+
+	public UFBoolean getParaBillNoEditable() throws Exception {
+		return new UFBoolean(false);
+	}
+
+	public SuperVO[] queryByCondition(Class voClass, String whereString)throws Exception {
+		SuperVO[] vos = super.queryByCondition(voClass, whereString);
+		return vos;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Hashtable<String, Object> loadChildDataAry(String[] tableCodes,String key) throws Exception {
+		Hashtable<String, Object> dataHashTable = super.loadChildDataAry(tableCodes, key);
+		return dataHashTable;
+	}
+
+	public SuperVO[] queryBodyAllData(Class voClass, String billType,
+			String key, String whereString) throws Exception {
+		I${bill.className}Server bs = NCLocator.getInstance().lookup(I${bill.className}Server.class);
+		${bill.className}VO[] bodyvos = bs.query${bill.className}ByCondition(whereString, null);
+		return bodyvos;
+	}
+
+	public SuperVO[] queryHeadAllData(Class headClass, String strBillType,String whereString) throws Exception {
+		I${bill.className}Server bs = NCLocator.getInstance().lookup(I${bill.className}Server.class);
+		
+		${bill.className}VO[] headvos=bs.query${bill.className}ByCondition(whereString, " order by vcode asc ");
+		return headvos;
+	}
+
+	public SuperVO queryByPrimaryKey(Class voClass, String strKey)throws Exception {
+		SuperVO headvo = super.queryByPrimaryKey(voClass, strKey);
+		return headvo;
+	}
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nc5.generator.fx.controller.GenerateController"
+            fitToWidth="true" styleClass="generate-tab">
+
+    <VBox spacing="20">
+        <padding>
+            <Insets top="20" right="30" bottom="20" left="30"/>
+        </padding>
+
+        <!-- 生成选项组 -->
+        <TitledPane text="生成选项" expanded="true" collapsible="false">
+            <VBox spacing="15">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <HBox spacing="30" alignment="CENTER_LEFT">
+                    <CheckBox fx:id="generateClientCheck" text="生成客户端代码 (Client)"/>
+                    <CheckBox fx:id="generateBusinessCheck" text="生成业务逻辑代码 (BS/Impl/Rule)"/>
+                    <CheckBox fx:id="generateMetadataCheck" text="生成元数据配置"/>
+                </HBox>
+
+                <Label text="说明：VO层代码始终生成" styleClass="hint-label"/>
+            </VBox>
+        </TitledPane>
+
+        <!-- 输出目录配置 -->
+        <TitledPane text="输出配置" expanded="true" collapsible="false">
+            <VBox spacing="15">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <!-- 输出目录 -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="输出目录:" styleClass="field-label"/>
+                    <TextField fx:id="outputDirField" HBox.hgrow="ALWAYS" promptText="选择代码输出目录"/>
+                    <Button text="浏览..." onAction="#handleBrowseOutputDir" styleClass="tool-button"/>
+                    <Button text="清空输出目录" onAction="#handleClearOutputDir" styleClass="tool-button"/>
+                </HBox>
+
+                <!-- 项目源码目录 -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="项目源码:" styleClass="field-label"/>
+                    <TextField fx:id="projectSrcField" HBox.hgrow="ALWAYS" promptText="选择项目源码目录（用于同步代码）"/>
+                    <Button text="浏览..." onAction="#handleBrowseProjectSrc" styleClass="tool-button"/>
+                    <Separator orientation="VERTICAL"/>
+                    <CheckBox fx:id="syncAfterGenerate" selected="true" text="自动同步"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
+    </VBox>
+</ScrollPane>

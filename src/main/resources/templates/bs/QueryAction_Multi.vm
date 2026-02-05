@@ -1,0 +1,51 @@
+package nc.bs.${bill.packageName}.${bill.classNameLower};
+
+import nc.impl.dygpubapp.persitence.bill.BillQuery;
+import nc.impl.dygpubapp.persitence.vo.VOQuery;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bill.className}HVO;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+#if($bill.bodyCodeList && $bill.bodyCodeList.size() > 0)
+#foreach($bodyCode in $bill.bodyCodeList)
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bodyCode}VO;
+#end
+#end
+import nc.vo.pub.SuperVO;
+
+public class QueryAction {
+	public SuperVO[] queryByCondition(Class voClass, String whereSql) {
+		SuperVO[] vos = null;
+		if (voClass.getName().equals(${bill.className}HVO.class.getName())) {
+			vos = this.queryHeadData(whereSql, null);
+#if($bill.bodyCodeList && $bill.bodyCodeList.size() > 0)
+#foreach($bodyCode in $bill.bodyCodeList)
+		} else if (voClass.getName().equals(${bodyCode}VO.class.getName())) {
+			vos = this.query${bodyCode}BodyData(whereSql, null);
+#end
+#end
+		}
+		return vos;
+	}
+
+#if($bill.bodyCodeList && $bill.bodyCodeList.size() > 0)
+#foreach($bodyCode in $bill.bodyCodeList)
+	public ${bodyCode}VO[] query${bodyCode}BodyData(String whereSql, String order) {
+		VOQuery<${bodyCode}VO> querybo = new VOQuery<${bodyCode}VO>(${bodyCode}VO.class);
+		${bodyCode}VO[] bodyvos = querybo.queryWithWhereKeyWord(whereSql,order);
+		return bodyvos;
+	}
+	
+#end
+#end
+	public ${bill.className}HVO[] queryHeadData(String whereSql, String order) {
+		VOQuery<${bill.className}HVO> querybo = new VOQuery<${bill.className}HVO>(${bill.className}HVO.class);
+		${bill.className}HVO[] headvos = querybo.queryWithWhereKeyWord(whereSql,order);
+		return headvos;
+	}
+
+	public Agg${bill.className}VO[] queryBillData(String[] keys) {
+		BillQuery<Agg${bill.className}VO> querybo = new BillQuery<Agg${bill.className}VO>(Agg${bill.className}VO.class);
+		Agg${bill.className}VO[] billvos = querybo.query(keys);
+		return billvos;
+	}
+
+}

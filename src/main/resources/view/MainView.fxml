@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.nc5.generator.fx.controller.MainController"
+    fx:id="rootPane"
+    prefWidth="1100" prefHeight="750">
+
+    <!-- 顶部菜单栏 -->
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="文件">
+                    <MenuItem text="新建配置" onAction="#handleNewConfig" accelerator="Ctrl+N" />
+                    <MenuItem text="打开配置..." onAction="#handleOpenConfig" accelerator="Ctrl+O" />
+                    <Menu fx:id="recentFilesMenu" text="打开最近" />
+                    <SeparatorMenuItem />
+                    <MenuItem text="保存配置" onAction="#handleSaveConfig" accelerator="Ctrl+S" />
+                    <MenuItem text="另存为..." onAction="#handleSaveAsConfig"
+                        accelerator="Ctrl+Shift+S" />
+                    <SeparatorMenuItem />
+                    <MenuItem text="退出" onAction="#handleExit" />
+                </Menu>
+                <Menu text="生成">
+                    <MenuItem text="生成代码" onAction="#handleGenerate" accelerator="F6" />
+                </Menu>
+                <Menu text="帮助">
+                    <MenuItem text="关于" onAction="#handleAbout" />
+                </Menu>
+            </MenuBar>
+
+            <!-- 工具栏 -->
+            <ToolBar>
+                <Button text="新建" onAction="#handleNewConfig" styleClass="tool-button" />
+                <Button text="打开" onAction="#handleOpenConfig" styleClass="tool-button" />
+                <Button text="保存" onAction="#handleSaveConfig" styleClass="tool-button" />
+                <Separator orientation="VERTICAL" />
+                <Button text="生成代码" onAction="#handleGenerate"
+                    styleClass="tool-button,primary-button" />
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <!-- 中部主内容区 -->
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE" styleClass="main-tab-pane">
+            <Tab text="基本信息">
+                <fx:include source="BasicInfoTab.fxml" fx:id="basicInfoTab" />
+            </Tab>
+            <Tab text="表头字段">
+                <fx:include source="HeadFieldsTab.fxml" fx:id="headFieldsTab" />
+            </Tab>
+            <Tab text="表体字段">
+                <fx:include source="BodyFieldsTab.fxml" fx:id="bodyFieldsTab" />
+            </Tab>
+            <Tab text="枚举配置">
+                <fx:include source="EnumConfigTab.fxml" fx:id="enumConfigTab" />
+            </Tab>
+            <Tab text="生成选项">
+                <fx:include source="GenerateTab.fxml" fx:id="generateTab" />
+            </Tab>
+            <Tab text="代码预览">
+                <fx:include source="CodePreviewTab.fxml" fx:id="codePreviewTab" />
+            </Tab>
+        </TabPane>
+    </center>
+
+    <!-- 底部状态栏 -->
+    <bottom>
+        <HBox styleClass="status-bar" spacing="10">
+            <padding>
+                <Insets top="5" right="10" bottom="5" left="10" />
+            </padding>
+            <Label fx:id="statusLabel" text="就绪" HBox.hgrow="ALWAYS" />
+            <Separator orientation="VERTICAL" />
+            <Label fx:id="configPathLabel" text="未加载配置文件" />
+        </HBox>
+    </bottom>
+
+</BorderPane>

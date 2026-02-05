@@ -1,0 +1,112 @@
+package nc.ui.${bill.packageName}.${bill.classNameLower};
+
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.${bill.packageName}.${bill.classNameLower}.I${bill.className}Server;
+import nc.itf.uap.IUAPQueryBS;
+import nc.jdbc.framework.processor.ArrayListProcessor;
+import nc.ui.ahu.pub.excelimp.ExcelImpDialog;
+import nc.ui.ahu.pub.excelimp.IExcelImpChecker;
+import nc.ui.ahu.pub.excelimp.IExcelImpContext;
+import nc.ui.trade.businessaction.IBusinessController;
+import nc.ui.trade.controller.IControllerBase;
+import nc.ui.trade.manage.BillManageUI;
+import nc.ui.trade.manage.ManageEventHandler;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bill.className}VO;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFBoolean;
+
+public class ${bill.className}EventHandler extends ManageEventHandler implements IExcelImpChecker ,IExcelImpContext{
+	
+	public ${bill.className}EventHandler(BillManageUI billUI, IControllerBase control) {
+		super(billUI, control);
+	}
+
+	@Override
+	protected IBusinessController createBusinessAction() {
+		return new ${bill.className}BusinessAction();
+	}
+	
+	private ${bill.className}ClientUI getClientUI() {
+		return (${bill.className}ClientUI) getBillUI();
+	}
+	
+	private IUAPQueryBS QueryBS;
+	private I${bill.className}Server ${bill.classNameLower}server;
+	private ExcelImpDialog m_eDlg=null;
+	
+	
+	protected ExcelImpDialog getExcelDialog(){
+		if(m_eDlg==null){
+			m_eDlg=new ExcelImpDialog(getClientUI(),this);
+		}
+		return m_eDlg;
+	}
+	
+	protected IUAPQueryBS getQueryBS(){
+		if(QueryBS==null){
+			QueryBS=NCLocator.getInstance().lookup(IUAPQueryBS.class);
+		}
+		return QueryBS;
+	}
+	
+	protected I${bill.className}Server get${bill.className}Server(){
+		if(${bill.classNameLower}server==null){
+			${bill.classNameLower}server=NCLocator.getInstance().lookup(I${bill.className}Server.class);
+		}
+		return ${bill.classNameLower}server;
+	}
+	
+	public boolean checkImportFile(File file) throws Exception {
+		// 文件校验逻辑
+		return true;
+	}
+
+	public boolean checkImportVO(CircularlyAccessibleValueObject[] importVOs) throws Exception {
+		return true;
+	}
+
+	public IExcelImpChecker getChecker() {
+		return this;
+	}
+
+	public String[][] getFieldsMapping() {
+		// Excel字段映射配置
+		String[][] fieldMapping=new String[][]{
+				// {"Excel列名","字段名"},
+		};
+		return fieldMapping;
+	}
+
+	public String getFileMD5Field() {
+		return null;
+	}
+
+	public String getFilePathField() {
+		return null;
+	}
+
+	public String getImportVOName() {
+		// 导入VO类名
+		return "";
+	}
+
+	public String getPkField() {
+		return null;
+	}
+	
+	@Override
+	protected void onBoImport() throws Exception {
+		getExcelDialog().getUIpnlField().getBillModel().clearBodyData();
+		getExcelDialog().getUIltlWorkBook().setLeftData(null);
+		getExcelDialog().getUIltlWorkBook().setRightData(null);
+		getExcelDialog().showModal();
+	}
+}

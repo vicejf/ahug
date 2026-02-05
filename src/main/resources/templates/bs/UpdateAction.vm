@@ -1,0 +1,56 @@
+package nc.bs.${bill.packageName}.${bill.classNameLower};
+
+import nc.impl.dygpubapp.bp.rule.CompareAroundProcesser;
+import nc.impl.dygpubapp.persitence.bill.BillUpdate;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}SaveBeforeRule;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}UpdateVersionRule;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.dygpubapp.appframe.log.TimeLog;
+import nc.vo.dygpubapp.appframe.transfer.BillTransferTool;
+
+public class UpdateAction {
+
+	private CompareAroundProcesser<Agg${bill.className}VO> processer;
+
+	public UpdateAction() {
+		this.processer = new CompareAroundProcesser<Agg${bill.className}VO>();
+	}
+
+	public CompareAroundProcesser<Agg${bill.className}VO> getAroundProcesser() {
+		return this.processer;
+	}
+
+	public Agg${bill.className}VO[] update(Agg${bill.className}VO[] bills) {
+	    TimeLog.logStart();
+	    BillTransferTool<Agg${bill.className}VO> transferTool =new BillTransferTool<Agg${bill.className}VO>(bills);
+	    Agg${bill.className}VO[] updatebills = transferTool.getClientFullInfoBill();
+	    Agg${bill.className}VO[] originBills = transferTool.getOriginBills();
+	    TimeLog.info("补全前台VO、获得修改前VO、加锁、检查时间戳"); 
+
+		TimeLog.logStart();
+		this.addBeforeRule(this.processer);
+		this.processer.before(updatebills, originBills);
+		TimeLog.info("修改保存前执行业务规则"); 
+
+		TimeLog.logStart();
+		BillUpdate<Agg${bill.className}VO> bo = new BillUpdate<Agg${bill.className}VO>();
+		Agg${bill.className}VO[] vos = bo.update(updatebills, originBills);
+		TimeLog.info("保存修改单据到数据库"); 
+
+		TimeLog.logStart();
+		this.addAfterRule(this.processer);
+		this.processer.after(vos, originBills);
+		TimeLog.info("修改保存后执行业务规则"); 
+
+		return vos;
+	}
+
+	private void addBeforeRule(CompareAroundProcesser<Agg${bill.className}VO> processer) {
+		processer.addBeforeRule(new ${bill.className}UpdateVersionRule());
+		processer.addBeforeRule(new ${bill.className}SaveBeforeRule());
+	}
+
+	private void addAfterRule(CompareAroundProcesser<Agg${bill.className}VO> processer) {
+		// 在此处添加修改后业务规则
+	}
+}

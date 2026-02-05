@@ -1,0 +1,70 @@
+package nc.bs.${bill.packageName}.${bill.classNameLower};
+
+import java.util.ArrayList;
+import java.util.List;
+
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}SaveAfterRule;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.dygpubapp.appframe.entity.util.VOTool;
+
+public class SaveAction {
+	
+	public Agg${bill.className}VO[] save(Agg${bill.className}VO[] bills) {
+		if ((bills == null) || (bills.length == 0)) {
+			return null;
+		}
+		List<Agg${bill.className}VO> lstvos = new ArrayList<Agg${bill.className}VO>();
+		Agg${bill.className}VO[] updatevos = this.getUpdateVO(bills);
+		Agg${bill.className}VO[] insertvos = this.getInsertVO(bills);
+		if ((updatevos != null) && (updatevos.length > 0)) {
+			UpdateAction updateAction = new UpdateAction();
+			updatevos = updateAction.update(updatevos);
+			for (Agg${bill.className}VO vo : updatevos) {
+				lstvos.add(vo);
+			}
+		}
+		if ((insertvos != null) && (insertvos.length > 0)) {
+			InsertAction insertAction = new InsertAction();
+			insertvos = insertAction.insert(insertvos);
+			for (Agg${bill.className}VO vo : insertvos) {
+				lstvos.add(vo);
+			}
+		}
+		Agg${bill.className}VO[] retvos = lstvos.toArray(new Agg${bill.className}VO[0]);
+		
+		//保存后规则
+		${bill.className}SaveAfterRule rule =new ${bill.className}SaveAfterRule();
+		rule.process(retvos);
+
+		return retvos;
+	}
+
+	private Agg${bill.className}VO[] getInsertVO(Agg${bill.className}VO[] orderVos) {
+		if ((orderVos == null) || (orderVos.length == 0)) {
+			return null;
+		}
+		List<Agg${bill.className}VO> newVos = new ArrayList<Agg${bill.className}VO>();
+		VOTool votool = new VOTool();
+		for (Agg${bill.className}VO vo : orderVos) {
+			if (votool.isAddNewBill(vo)) {
+				newVos.add(vo);
+			}
+		}
+		return newVos.toArray(new Agg${bill.className}VO[newVos.size()]);
+	}
+
+	private Agg${bill.className}VO[] getUpdateVO(Agg${bill.className}VO[] orderVos) {
+		if ((orderVos == null) || (orderVos.length == 0)) {
+			return null;
+		}
+		List<Agg${bill.className}VO> updateVos = new ArrayList<Agg${bill.className}VO>();
+		VOTool votool = new VOTool();
+		for (Agg${bill.className}VO vo : orderVos) {
+			if (!votool.isAddNewBill(vo)) {
+				updateVos.add(vo);
+			}
+		}
+		return updateVos.toArray(new Agg${bill.className}VO[updateVos.size()]);
+	}
+
+}

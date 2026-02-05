@@ -1,0 +1,56 @@
+package ${billPackage}.itf.${moduleLower}.${billCode};
+
+import ${billPackage}.vo.${moduleLower}.${billCode}.${BillVO};
+import ${billPackage}.vo.${moduleLower}.${billCode}.Agg${BillVO};
+#foreach($body in $bodyCodeList)
+import ${billPackage}.vo.${moduleLower}.${billCode}.${body}VO;
+#end
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
+
+/**
+ * ${billName} 后台服务接口
+ * @author ${author}
+ * @since ${date}
+ */
+public interface I${BillVO}Server {
+
+    /**
+     * 根据主键数组查询整单数据
+     */
+    Agg${BillVO}[] query${BillVO}BillData(String[] keys) throws BusinessException;
+
+    /**
+     * 根据条件和VO类查询数据
+     */
+    SuperVO[] query${BillVO}ByCondition(Class voClass, String whereSql) throws BusinessException;
+
+    /**
+     * 查询表头数据
+     */
+    ${BillVO}[] query${BillVO}HeadData(String whereSql, String order) throws BusinessException;
+
+#foreach($body in $bodyCodeList)
+    /**
+     * 查询${body}表体数据
+     */
+    ${body}VO[] query${body}BodyData(String whereSql, String order) throws BusinessException;
+#end
+
+    /**
+     * 保存整单数据
+     */
+    Agg${BillVO}[] saveBillComVos(Agg${BillVO}[] bills) throws BusinessException;
+
+    /**
+     * 更新整单数据
+     */
+    Agg${BillVO}[] update(Agg${BillVO}[] bills) throws BusinessException;
+
+    /**
+     * 删除整单数据
+     */
+    Agg${BillVO}[] delete(Agg${BillVO}[] bills) throws BusinessException;
+
+    // 可扩展：外部系统同步等特殊业务方法
+}

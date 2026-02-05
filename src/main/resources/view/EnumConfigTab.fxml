@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nc5.generator.fx.controller.EnumConfigController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="枚举配置" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <SplitPane dividerPositions="0.5" orientation="HORIZONTAL" VBox.vgrow="ALWAYS">
+
+        <!-- 左侧：枚举配置列表 -->
+        <VBox spacing="10">
+            <TableView fx:id="enumTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="enumNameCol" text="枚举名称" prefWidth="120"/>
+                    <TableColumn fx:id="enumDisplayNameCol" text="显示名称" prefWidth="150"/>
+                    <TableColumn fx:id="enumClassNameCol" text="类名" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="5">
+                <Button fx:id="addEnumBtn" text="添加" onAction="#handleAddEnum"/>
+                <Button fx:id="updateEnumBtn" text="更新" onAction="#handleUpdateEnum"/>
+                <Button fx:id="deleteEnumBtn" text="删除" onAction="#handleDeleteEnum"/>
+                <Button fx:id="clearEnumBtn" text="清空" onAction="#handleClearEnum"/>
+            </HBox>
+        </VBox>
+
+        <!-- 右侧：枚举详情和枚举项 -->
+        <VBox spacing="10">
+            <!-- 枚举详情 -->
+            <GridPane hgap="10" vgap="10">
+                <Label text="枚举名称:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="enumNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="显示名称:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="enumDisplayNameField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="类名:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="enumClassNameField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+
+            <Separator/>
+
+            <Label text="枚举项" style="-fx-font-weight: bold;"/>
+
+            <TableView fx:id="enumItemTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="itemDisplayCol" text="显示文本" prefWidth="150"/>
+                    <TableColumn fx:id="itemValueCol" text="枚举值" prefWidth="150"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="5">
+                <Button fx:id="addItemBtn" text="添加项" onAction="#handleAddItem"/>
+                <Button fx:id="updateItemBtn" text="更新项" onAction="#handleUpdateItem"/>
+                <Button fx:id="deleteItemBtn" text="删除项" onAction="#handleDeleteItem"/>
+                <Button fx:id="clearItemBtn" text="清空项" onAction="#handleClearItem"/>
+            </HBox>
+
+            <GridPane hgap="10" vgap="10">
+                <Label text="显示文本:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="itemDisplayField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="枚举值:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="itemValueField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            </GridPane>
+        </VBox>
+    </SplitPane>
+</VBox>

@@ -1,0 +1,131 @@
+package nc.ui.${bill.packageName}.${bill.classNameLower};
+
+import java.util.List;
+
+import javax.swing.ListSelectionModel;
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.uap.IUAPQueryBS;
+import nc.jdbc.framework.processor.ArrayListProcessor;
+import nc.ui.pub.ClientEnvironment;
+import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.bill.BillItem;
+import nc.ui.pub.bill.IBillItem;
+import nc.ui.trade.bill.AbstractManageController;
+import nc.ui.trade.bill.BillCardPanelWrapper;
+import nc.ui.trade.bill.BillListPanelWrapper;
+import nc.ui.trade.bill.BillTemplateWrapper;
+import nc.ui.trade.bsdelegate.BusinessDelegator;
+import nc.ui.trade.button.ButtonVOFactory;
+import nc.ui.trade.button.IBillButton;
+import nc.ui.trade.manage.ManageEventHandler;
+import nc.ui.trade.multichild.MultiChildBillManageUI;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bill.className}HVO;
+#if($bill.bodyCodeList && $bill.bodyCodeList.size() > 0)
+#foreach($bodyCode in $bill.bodyCodeList)
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bodyCode}VO;
+#end
+#end
+import nc.vo.pub.AggregatedValueObject;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.button.ButtonVO;
+import nc.vo.trade.field.IBillField;
+
+/**
+ * $bill.billName
+ * 
+ * @author $bill.author
+ * 
+ */
+@SuppressWarnings("serial")
+public class ${bill.className}ClientUI extends MultiChildBillManageUI {
+
+	public ${bill.className}ClientUI() {
+		super();
+		init();
+		initlize();
+	}
+
+	public ${bill.className}ClientUI(String pk_corp, String pk_billType, String pk_busitype,
+			String operater, String billId) {
+		super(pk_corp, pk_billType, pk_busitype, operater, billId);
+		initlize();
+	}
+
+	private void init() {
+#if($bill.bodyCodeList && $bill.bodyCodeList.size() > 0)
+#foreach($bodyCode in $bill.bodyCodeList)
+		getBillListPanel().getChildListPanel(${bodyCode}VO.TABLENAME).getTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		getBillCardPanel().getBodyPanel(${bodyCode}VO.TABLENAME).getTable().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+#end
+#end
+		ClientEnvironment.getInstance().setDate(ClientEnvironment.getServerTime().getDate());//设置当前客户端正确时间
+	}
+
+	private void initlize() {
+		getBillCardPanel().setAutoExecHeadEditFormula(true);
+		BillItem[] items = getBillCardPanel().getBodyItems();
+		if (items != null && items.length > 0) {
+			for (int i = 0; i < items.length; i++) {
+				BillItem item = items[i];
+				if (item.getDataType() == BillItem.INTEGER|| item.getDataType() == BillItem.DECIMAL) {
+					if (item.isShow() && item.getNumberFormat() != null) {
+						item.getNumberFormat().setShowZeroLikeNull(false);
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	protected AbstractManageController createController() {
+		return new ${bill.className}Controller();
+	}
+
+	@Override
+	protected BusinessDelegator createBusinessDelegator() {
+		return new ${bill.className}Delegator();
+	}
+
+	@Override
+	protected ManageEventHandler createEventHandler() {
+		return new ${bill.className}EventHandler(this, getUIControl());
+	}
+
+	@Override
+	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos) throws Exception {
+		super.setBodySpecialData(vos);
+	}
+
+	@Override
+	protected void setHeadSpecialData(CircularlyAccessibleValueObject vo, int intRow) throws Exception {
+		super.setHeadSpecialData(vo, intRow);
+	}
+
+	@Override
+	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos) throws Exception {
+		super.setTotalHeadSpecialData(vos);
+	}
+
+	@Override
+	protected void initSelfData() {
+		super.initSelfData();
+	}
+
+	@Override
+	public void setDefaultData() throws Exception {
+		super.setDefaultData();
+	}
+
+	private IUAPQueryBS uapserver;
+
+	private IUAPQueryBS queryUAPServer() {
+		if (uapserver == null) {
+			uapserver = NCLocator.getInstance().lookup(IUAPQueryBS.class);
+		}
+		return uapserver;
+	}
+
+}

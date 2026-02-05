@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.nc5.generator.fx.controller.CodePreviewController"
+      spacing="15" styleClass="code-preview-tab">
+
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <!-- 主内容分割区 -->
+    <SplitPane VBox.vgrow="ALWAYS" dividerPositions="0.3">
+
+        <!-- 左侧：文件树 -->
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="生成的文件" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="展开" onAction="#handleExpandAll" styleClass="tool-button"/>
+                <Button text="收起" onAction="#handleCollapseAll" styleClass="tool-button"/>
+                <Button text="刷新" onAction="#handleRefresh" styleClass="tool-button"/>
+            </HBox>
+            <TreeView fx:id="fileTree" VBox.vgrow="ALWAYS"/>
+        </VBox>
+
+        <!-- 右侧：代码预览 -->
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="代码预览:" styleClass="section-title"/>
+                <Label fx:id="currentFileLabel" text="未选择文件" styleClass="file-name-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="复制" onAction="#handleCopyCode" styleClass="tool-button"/>
+                <Button text="打开所在目录" onAction="#handleOpenDir" styleClass="tool-button"/>
+            </HBox>
+            <TextArea fx:id="codePreview" VBox.vgrow="ALWAYS" editable="false"
+                      styleClass="code-preview" wrapText="false"/>
+        </VBox>
+
+    </SplitPane>
+
+    <!-- 操作日志 -->
+    <TitledPane text="操作日志" expanded="false" collapsible="true">
+        <TextArea fx:id="logArea" prefHeight="120" editable="false" styleClass="log-area"/>
+    </TitledPane>
+
+</VBox>

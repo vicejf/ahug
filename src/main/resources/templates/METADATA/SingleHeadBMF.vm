@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component conRouterType="手动" createTime="$now" creator="" description="$bill.description" displayName="$bill.billName" gencodestyle="NC传统样式" help="" id="$bill.componentId" mainEntity="$bill.mainEntityId" modifier="" modifyTime="$now" name="$bill.classNameLower" namespace="$bill.module" ownModule="$bill.module" preLoad="false" resModuleName="$bill.classNameLower" version="12" versionType="0">
+    <celllist>
+        <entity accessorClassName="nc.md.model.access.javamap.AggVOStyle" bizItfImpClassName="" componentID="$bill.componentId" createTime="$now" creator="" czlist="" description="" displayName="$bill.billName" fullClassName="nc.vo.$bill.packageName.$bill.classNameLower.$bill.classNameHVO" height="145" help="" id="$bill.mainEntityId" isAuthen="true" isPrimary="true" keyAttributeId="$bill.pkFieldId" modInfoClassName="" modifier="" modifyTime="$now" name="$bill.billName" resid="" stereoType="" tableName="${bill.module}_${bill.classNameLower}_h" versionType="0" visibility="public" width="134" x="400" y="124">
+            <attributelist>
+#foreach($field in $bill.headFields)
+                <attribute accessStrategy="" calculation="false" classID="$bill.mainEntityId" dataType="$!field.dataType" dataTypeStyle="SINGLE" dbtype="$field.dbType" defaultValue="" description="" displayName="$field.label" fieldName="$field.name" fieldType="$field.javaType.toLowerCase()" fixedLength="false" help="" id="$field.id" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isGlobalization="false" isHide="false" isKey="$field.primaryKey" isNullable="!$field.required" isReadOnly="!$field.editable" isShare="false" length="$!field.length" maxValue="" minValue="" name="$field.name" precise="" refModelName="$!field.refModelName" resid="" sequence="$foreach.index" typeDisplayName="$!field.typeDisplayName" typeName="$field.javaType" versionType="0" visibility="public"/>
+#end
+            </attributelist>
+            <operationlist/>
+            <busiitfs>
+#if($bill.enablePubBillInterface)
+                <itfid>2fd714f0-b6b0-4aeb-906e-ead92767ce32</itfid>
+#end
+#if($bill.enableUser)
+                <itfid>60bdf1fb-95e3-43dc-8feb-f874de9293eb</itfid>
+#end
+#if($bill.enableBillStatus)
+                <itfid>44d700f1-086c-4ae7-8f10-0db5a54fdcce</itfid>
+#end
+            </busiitfs>
+            <busimaps>
+#if($bill.enablePubBillInterface)
+                <busimap attrid="$bill.pkFieldId" busiitfattrid="eb4f78a8-7a2d-4aa4-9817-f4418d11f25e" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.billNoFieldId" busiitfattrid="d0eab74e-d8cd-4bba-bfa1-4920b307b565" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.corpFieldId" busiitfattrid="ef7713f8-4707-456a-92fe-091785b0c65e" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.busiTypeFieldId" busiitfattrid="aa80f66e-f1e3-47cd-818c-e3218b7e207e" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.operatorIdFieldId" busiitfattrid="4458032b-f71e-46f5-9826-ce458009d21d" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.approverFieldId" busiitfattrid="826357b1-1210-4ecf-8ebc-4d2dc0ab2813" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.billStatusFieldId" busiitfattrid="0d045cc9-c178-489d-abbf-17c997e3b790" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.approveNoteFieldId" busiitfattrid="bf83cd87-aafe-40b1-9545-ed506c8b7214" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.approveDateFieldId" busiitfattrid="7d07c873-b21f-4d4c-a21c-92c43b9b7786" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.billTypeFieldId" busiitfattrid="9d7601f0-4ed7-4dca-868d-1c2a976fe458" busiitfid="2fd714f0-b6b0-4aeb-906e-ead92767ce32" cellid="$bill.mainEntityId"/>
+#end
+#if($bill.enableUser)
+                <busimap attrid="$bill.pkFieldId" busiitfattrid="25bd08e0-96da-40a6-bfc0-1298b2399f4a" busiitfid="60bdf1fb-95e3-43dc-8feb-f874de9293eb" cellid="$bill.mainEntityId"/>
+#end
+#if($bill.enableBillStatus)
+                <busimap attrid="$bill.operatorIdFieldId" busiitfattrid="0fb0e1e9-1fe3-470e-82a3-3c986c6044e0" busiitfid="44d700f1-086c-4ae7-8f10-0db5a54fdcce" cellid="$bill.mainEntityId"/>
+                <busimap attrid="$bill.billDateFieldId" busiitfattrid="c9ce9f8c-3034-4765-908c-836f695646cb" busiitfid="44d700f1-086c-4ae7-8f10-0db5a54fdcce" cellid="$bill.mainEntityId"/>
+                <busimap attrid="" busiitfattrid="4ccb1e5e-79a6-484c-b936-fa16cd9f1eca" busiitfid="44d700f1-086c-4ae7-8f10-0db5a54fdcce" cellid="$bill.mainEntityId"/>
+#end
+            </busimaps>
+            <canzhaolist/>
+            <accessor classFullname="nc.md.model.access.javamap.AggVOStyle" displayName="AggVO" name="AggVO">
+                <properties>
+                    <property classid="$bill.mainEntityId" displayName="包装类名" name="wrapclsname" sequence="0" value="nc.vo.$bill.packageName.$bill.classNameLower.Agg$bill.className"/>
+                </properties>
+            </accessor>
+        </entity>
+#if($bill.enums && $bill.enums.size() > 0)
+#foreach($enum in $bill.enums)
+        <Enumerate componentID="$bill.componentId" createTime="$now" creator="" dataType="BS000010000100001001" dbtype="varchar" description="" displayName="$enum.displayName" fullClassName="nc.vo.$bill.packageName.$bill.classNameLower.$enum.className" height="100" help="" id="$enum.id" modInfoClassName="" modifier="" modifyTime="$now" name="$enum.name" resid="" typeDisplayName="String" typeName="String" versionType="0" visibility="public" width="80" x="662" y="142">
+            <enumitemlist>
+#foreach($item in $enum.items)
+                <enumitem description="" enumDisplay="$item.display" enumID="$enum.id" enumValue="$item.value" id="$item.id" resid="" sequence="$foreach.index" versionType="0"/>
+#end
+            </enumitemlist>
+        </Enumerate>
+#end
+#end
+    </celllist>
+    <connectlist>
+#if($bill.enablePubBillInterface)
+        <busiitfconnection bizItfImpClassName="" componentID="$bill.componentId" createTime="$now" creator="" description="" displayName="" help="" id="$bill.connectionPubBillId" modifier="" modifyTime="$now" name="busiItf connection" realsource="$bill.mainEntityId" realtarget="2fd714f0-b6b0-4aeb-906e-ead92767ce32" source="$bill.mainEntityId" target="$bill.refPubBillId" versionType="0">
+            <points/>
+        </busiitfconnection>
+#end
+#if($bill.enableUser)
+        <busiitfconnection bizItfImpClassName="" componentID="$bill.componentId" createTime="$now" creator="" description="" displayName="" help="" id="$bill.connectionUserId" modifier="" modifyTime="$now" name="busiItf connection" realsource="$bill.mainEntityId" realtarget="60bdf1fb-95e3-43dc-8feb-f874de9293eb" source="$bill.mainEntityId" target="$bill.refUserId" versionType="0">
+            <points/>
+        </busiitfconnection>
+#end
+#if($bill.enableBillStatus)
+        <busiitfconnection bizItfImpClassName="" componentID="$bill.componentId" createTime="$now" creator="" description="" displayName="" help="" id="$bill.connectionBillStatusId" modifier="" modifyTime="$now" name="busiItf connection" realsource="$bill.mainEntityId" realtarget="44d700f1-086c-4ae7-8f10-0db5a54fdcce" source="$bill.mainEntityId" target="$bill.refBillStatusId" versionType="0">
+            <points/>
+        </busiitfconnection>
+#end
+    </connectlist>
+    <refdepends>
+#if($bill.enablePubBillInterface)
+        <dependfile module="uap" path="\pf\pfbizitf.bmf"/>
+#end
+#if($bill.enableUser)
+        <dependfile module="uap" path="\user\user.bmf"/>
+#end
+#if($bill.enablePubBillInterface)
+        <dependfile module="da" path="\da\billinterface.bmf"/>
+        <dependfile module="uap" path="\basedata\corp.bmf"/>
+        <dependfile module="uap" path="\pf\busitype.bmf"/>
+        <dependfile module="uap" path="\pf\billtype.bmf"/>
+#end
+    </refdepends>
+    <rulers>
+        <ruler isHorizontal="true" unit="0">
+            <guideList/>
+        </ruler>
+        <ruler isHorizontal="false" unit="0">
+            <guideList/>
+        </ruler>
+    </rulers>
+</component>

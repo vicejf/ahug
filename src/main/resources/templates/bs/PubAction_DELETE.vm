@@ -1,0 +1,34 @@
+package nc.bs.pub.action;
+
+import nc.bs.${bill.packageName}.${bill.classNameLower}.DeleteAction;
+import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.dygpubapp.appframe.exception.ExceptionUtils;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.compiler.PfParameterVO;
+
+public class N_${bill.className}_DELETE extends AbstractCompiler2 {
+	public N_${bill.className}_DELETE() {
+		super();
+	}
+
+	@Override
+	public String getCodeRemark() {
+		return "\n";
+	}
+
+	@Override
+	public Object runComClass(PfParameterVO vo) throws BusinessException {
+		try {
+			super.m_tmpVo = vo;
+
+			Agg${bill.className}VO[] inCurVOs = (Agg${bill.className}VO[]) this.getVos();
+			DeleteAction action = new DeleteAction();
+			Agg${bill.className}VO[] ret = action.delete(inCurVOs);
+			return ret;
+		} catch (Exception ex) {
+			ExceptionUtils.marsh(ex);
+		}
+		return null;
+	}
+}

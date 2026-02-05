@@ -1,0 +1,27 @@
+package nc.ui.${bill.packageName}.${bill.classNameLower};
+
+/**
+ * $bill.billName - 私有按钮接口
+ * @author $bill.author
+ * @since $year
+ */
+public interface ${bill.className}IPrivateBtn {
+
+    // 私有按钮ID定义
+
+    /**
+     * 提交按钮
+     */
+    public static final String BTN_SUBMIT = "btnSubmit";
+
+    /**
+     * 审批按钮
+     */
+    public static final String BTN_APPROVE = "btnApprove";
+
+    /**
+     * 取消审批按钮
+     */
+    public static final String BTN_UNAPPROVE = "btnUnapprove";
+
+}

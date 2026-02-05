@@ -1,0 +1,41 @@
+package nc.ui.${bill.packageName}.${bill.classNameLower};
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.${bill.packageName}.${bill.classNameLower}.I${bill.className}Server;
+import nc.ui.trade.base.AbstractBillUI;
+import nc.ui.trade.businessaction.BdBusinessAction;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bill.className}VO;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.pub.AggregatedValueObject;
+
+public class ${bill.className}BusinessAction extends BdBusinessAction {
+
+	private AbstractBillUI m_billUI = null;
+
+	public ${bill.className}BusinessAction() {
+		super();
+	}
+
+	public ${bill.className}BusinessAction(AbstractBillUI ui) {
+		super();
+		m_billUI = ui;
+	}
+
+	protected AbstractBillUI getUI() {
+		return this.m_billUI;
+	}
+
+	@Override
+	public AggregatedValueObject save(AggregatedValueObject billVO, String billType, 
+			String billDate, Object userObj, AggregatedValueObject checkVo) throws Exception {
+		Agg${bill.className}VO aggvo=(Agg${bill.className}VO) billVO;
+		${bill.className}VO hvo=(${bill.className}VO) aggvo.getParentVO();
+		if(hvo.getPk_${bill.classNameLower}_h()!=null&&!"".equals(hvo.getPk_${bill.classNameLower}_h())){
+			I${bill.className}Server server=NCLocator.getInstance().lookup(I${bill.className}Server.class);
+			${bill.className}VO newhvo=server.updateDeal(hvo);
+			aggvo.setParentVO(newhvo);
+			return aggvo;
+		}
+		return super.save(billVO, billType, billDate, userObj, checkVo);
+	}
+}

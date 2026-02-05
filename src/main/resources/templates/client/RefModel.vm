@@ -1,0 +1,26 @@
+package nc.ui.${bill.packageName}.${bill.classNameLower};
+
+import nc.ui.bd.ref.AbstractRefModel;
+
+public class ${bill.className}RefModel extends AbstractRefModel{
+	
+	public ${bill.className}RefModel() {
+		super();
+		init();
+	}
+	
+	private void init(){
+	
+		setRefNodeName("${bill.billName}参照");
+		setRefTitle("${bill.billName}参照");
+		setFieldCode(new String[] { "vcode","custname", });
+		setFieldName(new String[] { "客户编号","客户名称"});
+		setHiddenFieldCode(new String[] { "pk_${bill.classNameLower}_h"});
+		setPkFieldCode("pk_${bill.classNameLower}_h");
+		setRefCodeField("vcode");
+		setRefNameField("custname");
+		setTableName("ahu_${bill.classNameLower}_h");
+		setWherePart("pk_corp='"+getPk_corp()+"' and nvl(dr,0)=0 and nvl(isseal,'N')='N' ");
+		setOrderPart("vcode");
+	}
+}

@@ -1,0 +1,93 @@
+package ${billPackage}.impl.${moduleLower}.${billCode};
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ${billPackage}.bs.${moduleLower}.${billCode}.InsertAction;
+import ${billPackage}.bs.${moduleLower}.${billCode}.UpdateAction;
+import ${billPackage}.bs.${moduleLower}.${billCode}.DeleteAction;
+import ${billPackage}.bs.${moduleLower}.${billCode}.QueryAction;
+import ${billPackage}.vo.${moduleLower}.${billCode}.${BillVO};
+import ${billPackage}.vo.${moduleLower}.${billCode}.Agg${BillVO};
+#foreach($body in $bodyCodeList)
+import ${billPackage}.vo.${moduleLower}.${billCode}.${body}VO;
+#end
+import ${billPackage}.itf.${moduleLower}.${billCode}.I${BillVO}Server;
+import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
+import nc.impl.dygpubapp.persitence.bill.BillUpdate;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.SuperVO;
+import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDateTime;
+import nc.vo.dygpubapp.appframe.exception.ExceptionUtils;
+import nc.vo.dygpubapp.appframe.transfer.BillTransferTool;
+
+public class ${BillVO}ServerImpl implements I${BillVO}Server {
+
+    public Agg${BillVO}[] query${BillVO}BillData(String[] keys) throws BusinessException {
+        QueryAction qa = new QueryAction();
+        Agg${BillVO}[] aggvos = null;
+        try {
+            aggvos = qa.queryBillData(keys);
+        } catch (Exception e) {
+            ExceptionUtils.marsh(e);
+        }
+        return aggvos;
+    }
+
+    public SuperVO[] query${BillVO}ByCondition(Class voClass, String whereSql) throws BusinessException {
+        QueryAction qa = new QueryAction();
+        SuperVO[] svo = null;
+        try {
+            svo = qa.queryByCondition(voClass, whereSql);
+        } catch (Exception e) {
+            ExceptionUtils.marsh(e);
+        }
+        return svo;
+    }
+
+    public ${BillVO}[] query${BillVO}HeadData(String whereSql, String order) throws BusinessException {
+        QueryAction qa = new QueryAction();
+        ${BillVO}[] hvo = null;
+        try {
+            hvo = qa.queryHeadData(whereSql, order);
+        } catch (Exception e) {
+            ExceptionUtils.marsh(e);
+        }
+        return hvo;
+    }
+
+#foreach($body in $bodyCodeList)
+    public ${body}VO[] query${body}BodyData(String whereSql, String order) throws BusinessException {
+        QueryAction qa = new QueryAction();
+        ${body}VO[] bvos = null;
+        try {
+            bvos = qa.query${body}BodyData(whereSql, order);
+        } catch (Exception e) {
+            ExceptionUtils.marsh(e);
+        }
+        return bvos;
+    }
+#end
+
+    public Agg${BillVO}[] saveBillComVos(Agg${BillVO}[] bills) throws BusinessException {
+        InsertAction save = new InsertAction();
+        return save.insert(bills);
+    }
+
+    public Agg${BillVO}[] update(Agg${BillVO}[] bills) throws BusinessException {
+        BillTransferTool<Agg${BillVO}> transferTool = new BillTransferTool<Agg${BillVO}>(bills);
+        Agg${BillVO}[] updatebills = transferTool.getClientFullInfoBill();
+        Agg${BillVO}[] originBills = transferTool.getOriginBills();
+        BillUpdate<Agg${BillVO}> bo = new BillUpdate<Agg${BillVO}>();
+        return bo.update(updatebills, originBills);
+    }
+
+    public Agg${BillVO}[] delete(Agg${BillVO}[] bills) throws BusinessException {
+        DeleteAction del = new DeleteAction();
+        return del.delete(bills);
+    }
+
+    // 可扩展：外部系统同步、批量操作等业务方法
+}

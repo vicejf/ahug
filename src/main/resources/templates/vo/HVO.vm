@@ -1,0 +1,46 @@
+package nc.vo.${bill.packageName}.${bill.classNameLower};
+
+import java.io.Serializable;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDouble;
+
+/**
+ * $bill.billName - 表头VO
+ * @author $bill.author
+ * @since $year
+ */
+public class ${bill.className}HVO extends CircularlyAccessibleValueObject implements Serializable {
+
+    private static final long serialVersionUID = ${bill.hashCode()}L;
+
+#foreach($field in $bill.headFields)
+    /**
+     * $field.label
+     */
+    public static final String ${field.name.toUpperCase()} = "${field.name}";
+
+#end
+
+    public ${bill.className}HVO() {
+        super();
+    }
+
+#foreach($field in $bill.headFields)
+    /**
+     * 获取$field.label
+     */
+    public ${field.javaType} get${field.name.substring(0,1).toUpperCase()}${field.name.substring(1)}() {
+        return (${field.javaType}) getAttributeValue(${field.name.toUpperCase()});
+    }
+
+    /**
+     * 设置$field.label
+     */
+    public void set${field.name.substring(0,1).toUpperCase()}${field.name.substring(1)}(${field.javaType} ${field.name}) {
+        setAttributeValue(${field.name.toUpperCase()}, ${field.name});
+    }
+
+#end
+}

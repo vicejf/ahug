@@ -1,0 +1,53 @@
+package nc.bs.${bill.packageName}.${bill.classNameLower};
+
+import nc.impl.dygpubapp.bp.rule.AroundProcesser;
+import nc.impl.dygpubapp.persitence.bill.BillInsert;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}BillCodeRule;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}SaveRewriteBillRule;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}SaveBeforeRule;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.dygpubapp.appframe.log.TimeLog;
+
+public class InsertAction {
+
+	private AroundProcesser<Agg${bill.className}VO> processer;
+
+	public InsertAction() {
+		this.processer = new AroundProcesser<Agg${bill.className}VO>();
+	}
+
+	public Agg${bill.className}VO[] insert(Agg${bill.className}VO[] bills) {
+
+		TimeLog.logStart();
+		this.addBeforeRule(this.processer);
+		this.processer.before(bills);
+		TimeLog.info("保存前执行业务规则"); 
+
+		TimeLog.logStart();
+		BillInsert<Agg${bill.className}VO> bo = new BillInsert<Agg${bill.className}VO>();
+		Agg${bill.className}VO[] vos = bo.insert(bills);
+		TimeLog.info("保存单据到数据库"); 
+
+		TimeLog.logStart();
+		this.addAfterRule(this.processer);
+		this.processer.after(vos);
+		TimeLog.info("保存后执行业务规则"); 
+
+		return vos;
+	}
+
+	public AroundProcesser<Agg${bill.className}VO> getAroundProcesser() {
+		return this.processer;
+	}
+
+	private void addBeforeRule(AroundProcesser<Agg${bill.className}VO> processer) {
+		processer.addBeforeRule(new ${bill.className}BillCodeRule());
+		processer.addBeforeRule(new ${bill.className}SaveRewriteBillRule());
+		processer.addBeforeRule(new ${bill.className}SaveBeforeRule());
+	}
+
+	private void addAfterRule(AroundProcesser<Agg${bill.className}VO> processer) {
+		// 在此处添加保存后业务规则
+	}
+
+}

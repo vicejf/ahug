@@ -1,0 +1,56 @@
+package nc.bs.${bill.packageName}.${bill.classNameLower};
+
+import nc.impl.dygpubapp.bp.rule.AroundProcesser;
+import nc.impl.dygpubapp.persitence.bill.BillDelete;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}DelRewriteBillRule;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.dygpubapp.appframe.log.TimeLog;
+import nc.vo.dygpubapp.appframe.transfer.BillTransferTool;
+import nc.vo.pub.VOStatus;
+
+public class DeleteAction {
+
+	private AroundProcesser<Agg${bill.className}VO> processer;
+
+	public DeleteAction() {
+		this.processer = new AroundProcesser<Agg${bill.className}VO>();
+	}
+
+	public Agg${bill.className}VO[] delete(Agg${bill.className}VO[] bills) {
+	    TimeLog.logStart();
+	    BillTransferTool<Agg${bill.className}VO> transferTool =new BillTransferTool<Agg${bill.className}VO>(bills);
+	    Agg${bill.className}VO[] delbills = transferTool.getOriginBills();
+	    for (Agg${bill.className}VO vo : delbills) {
+	    	vo.getParent().setStatus(VOStatus.DELETED);
+		}
+
+		TimeLog.logStart();
+		this.addBeforeRule(this.getAroundProcesser());
+		this.getAroundProcesser().before(delbills);
+		TimeLog.info("删除前执行业务规则"); 
+
+		TimeLog.logStart();
+		BillDelete<Agg${bill.className}VO> bo = new BillDelete<Agg${bill.className}VO>();
+		bo.delete(delbills);
+		TimeLog.info("写数据库，删除单据"); 
+
+		TimeLog.logStart();
+		this.addAfterRule(this.getAroundProcesser());
+		this.getAroundProcesser().after(delbills);
+		TimeLog.info("删除后执行业务规则"); 
+		
+		return delbills;
+	}
+
+	public AroundProcesser<Agg${bill.className}VO> getAroundProcesser() {
+		return this.processer;
+	}
+
+	private void addBeforeRule(AroundProcesser<Agg${bill.className}VO> processer) {
+		processer.addBeforeRule(new ${bill.className}DelRewriteBillRule());
+	}
+
+	private void addAfterRule(AroundProcesser<Agg${bill.className}VO> processer) {
+		// 在此处添加删除后业务规则
+	}
+}

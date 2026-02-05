@@ -1,0 +1,49 @@
+package nc.bs.pub.action;
+
+import nc.bs.${bill.packageName}.${bill.classNameLower}.QueryAction;
+import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}BeforeUNApprove;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.dygpubapp.appframe.exception.ExceptionUtils;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.compiler.PfParameterVO;
+
+/**
+ * ${bill.billName} - 取消审批动作
+ * @author ${bill.author}
+ * @since ${year}
+ */
+public class N_${bill.className}_UNAPPROVE extends AbstractCompiler2 {
+
+	public N_${bill.className}_UNAPPROVE() {
+		super();
+	}
+
+	@Override
+	public String getCodeRemark() {
+		return "\n";
+	}
+
+	@Override
+	public Object runComClass(PfParameterVO vo) throws BusinessException {
+		try {
+			super.m_tmpVo = vo;
+			Agg${bill.className}VO billvo = (Agg${bill.className}VO) this.getVo();
+
+			// 弃审前自定义规则
+			${bill.className}BeforeUNApprove checkRule = new ${bill.className}BeforeUNApprove();
+			checkRule.process(new Agg${bill.className}VO[] { billvo });
+
+			// 平台反审
+			procUnApproveFlow(vo);
+
+			// 返回VO
+			QueryAction querybo = new QueryAction();
+			Agg${bill.className}VO[] billvos = querybo.queryBillData(new String[] { billvo.getPrimaryKey() });
+			return billvos[0];
+		} catch (Exception ex) {
+			ExceptionUtils.marsh(ex);
+		}
+		return null;
+	}
+}

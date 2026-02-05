@@ -1,0 +1,38 @@
+package ${billPackage}.rule.${moduleLower}.${billCode};
+
+import nc.bs.framework.common.NCLocator;
+import nc.bs.framework.exception.ComponentException;
+import nc.itf.${moduleLower}.${billCode}.I${BillVO}Service;
+import nc.vo.${moduleLower}.${billCode}.Agg${BillVO};
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.VOStatus;
+import nc.vo.pub.lang.UFBoolean;
+import nc.vo.pub.lang.UFDate;
+import nc.vo.pub.lang.UFDateTime;
+
+/**
+ * ${billName} - ${ruleDesc}
+ * @author ${author}
+ * @since ${date}
+ */
+public class ${BillVO}${ruleType}Rule {
+
+    /**
+     * Rule执行入口
+     */
+    public void process(Agg${BillVO}[] vos) throws BusinessException {
+        if (vos == null || vos.length == 0) {
+            return;
+        }
+        for (Agg${BillVO} vo : vos) {
+            if (vo.getStatus() == VOStatus.DELETED) {
+                // 可根据场景处理删除逻辑
+                continue;
+            }
+            // TODO: 在此处添加${ruleDesc}的业务逻辑
+            // 示例：调用服务
+            // I${BillVO}Service service = NCLocator.getInstance().lookup(I${BillVO}Service.class);
+            // service.someMethod(vo);
+        }
+    }
+}

@@ -1,0 +1,54 @@
+package nc.bs.pub.action;
+
+import nc.bs.${bill.packageName}.${bill.classNameLower}.QueryAction;
+import nc.bs.pub.compiler.AbstractCompiler2;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}ApproveBeforeRule;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}AfterApproveRule;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
+import nc.vo.dygpubapp.appframe.exception.ExceptionUtils;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.compiler.PfParameterVO;
+import nc.vo.pub.pf.PfUtilWorkFlowVO;
+import nc.vo.wfengine.pub.WFTask;
+
+public class N_${bill.className}_APPROVE extends AbstractCompiler2 {
+	public N_${bill.className}_APPROVE() {
+		super();
+	}
+
+	public Object runComClass(PfParameterVO vo) throws BusinessException {
+		try {
+			super.m_tmpVo = vo;
+			Agg${bill.className}VO bill = (Agg${bill.className}VO) this.getVo();
+
+			PfUtilWorkFlowVO wk=m_tmpVo.m_workFlow;
+			boolean isCheckPass=wk.getIsCheckPass();			//是否审核通过
+			int taskType=wk.getTaskInfo().getTask().getTaskType();//任务类型
+			if(taskType!=WFTask.TYPE_BACKWARD){
+				String checkNote=wk.getCheckNote();
+				
+				${bill.className}ApproveBeforeRule rule=new ${bill.className}ApproveBeforeRule();
+				rule.process(bill,checkNote,isCheckPass);
+			}
+			
+			Object m_sysflowObj = procActionFlow(vo);
+			if (m_sysflowObj != null) {
+				return m_sysflowObj;
+			}
+			
+			${bill.className}AfterApproveRule afterRule=new ${bill.className}AfterApproveRule();
+			afterRule.process(new Agg${bill.className}VO[]{bill});
+
+			QueryAction querybo = new QueryAction();
+			Agg${bill.className}VO[] billvos = querybo.queryBillData(new String[] { bill.getPrimaryKey() });
+			return billvos[0];
+		} catch (Exception ex) {
+			ExceptionUtils.marsh(ex);
+		}
+		return null;
+	}
+
+	public String getCodeRemark() {
+		return "\n";
+	}
+}

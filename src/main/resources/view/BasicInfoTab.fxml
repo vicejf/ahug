@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nc5.generator.fx.controller.BasicInfoController"
+            fitToWidth="true" styleClass="basic-info-tab">
+    
+    <VBox spacing="20">
+        <padding>
+            <Insets top="20" right="30" bottom="20" left="30"/>
+        </padding>
+        
+        <!-- 基本信息组 -->
+        <TitledPane text="单据基本信息" expanded="true" collapsible="false">
+            <GridPane vgap="15" hgap="15">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100" prefWidth="120" maxWidth="150"/>
+                    <ColumnConstraints hgrow="ALWAYS" minWidth="200" prefWidth="300"/>
+                    <ColumnConstraints minWidth="100" prefWidth="120" maxWidth="150"/>
+                    <ColumnConstraints hgrow="ALWAYS" minWidth="200" prefWidth="300"/>
+                </columnConstraints>
+                
+                <!-- 第一行 -->
+                <Label text="单据类型:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="field-label"/>
+                <ComboBox fx:id="billTypeCombo" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                          prefWidth="200"/>
+
+                <HBox GridPane.rowIndex="0" GridPane.columnIndex="2" alignment="CENTER_LEFT" spacing="2">
+                    <Label text="单据编码" styleClass="field-label"/>
+                    <Label text="*" style="-fx-text-fill: #ff4d4f; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                </HBox>
+                <TextField fx:id="billCodeField" GridPane.rowIndex="0" GridPane.columnIndex="3"
+                           promptText="4位字母数字，自动大写（如：AU84、AUJZ）" styleClass="required-field"/>
+
+                <!-- 第二行：表头编码 + 表体编码 -->
+                <HBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_LEFT" spacing="2">
+                    <Label text="表头编码" styleClass="field-label"/>
+                </HBox>
+                <TextField fx:id="headCodeField" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                           promptText="如：AU84HVO" editable="false" focusTraversable="false"/>
+
+                <HBox GridPane.rowIndex="1" GridPane.columnIndex="2" alignment="CENTER_LEFT" spacing="2">
+                    <Label text="表体编码" styleClass="field-label"/>
+                    <Label text="(多表体)" style="-fx-text-fill: #888; -fx-font-size: 12px;"/>
+                </HBox>
+                <TextField fx:id="bodyCodeField" GridPane.rowIndex="1" GridPane.columnIndex="3"
+                           promptText="如：AU84BVO"/>
+
+                <!-- 第三行：单据名称 + 作者 -->
+                <HBox GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_LEFT" spacing="2">
+                    <Label text="单据名称" styleClass="field-label"/>
+                    <Label text="*" style="-fx-text-fill: #ff4d4f; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                </HBox>
+                <TextField fx:id="billNameField" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                           promptText="如：生产入库单" styleClass="required-field"/>
+
+                <Label text="作者:" GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="field-label"/>
+                <TextField fx:id="authorField" GridPane.rowIndex="2" GridPane.columnIndex="3"
+                           text="Flynn Chen" editable="false" disable="true" promptText="代码作者"/>
+            </GridPane>
+        </TitledPane>
+        
+    </VBox>
+</ScrollPane>

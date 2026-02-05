@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.nc5.generator.fx.controller.HeadFieldsController"
+      spacing="10" styleClass="fields-tab">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+    
+    <!-- 工具栏 -->
+    <ToolBar>
+        <Button text="添加字段" onAction="#handleAddField" styleClass="tool-button"/>
+        <Button text="删除选中" onAction="#handleDeleteField" styleClass="tool-button"/>
+        <Separator orientation="VERTICAL"/>
+        <Button text="上移" onAction="#handleMoveUp" styleClass="tool-button"/>
+        <Button text="下移" onAction="#handleMoveDown" styleClass="tool-button"/>
+        <Separator orientation="VERTICAL"/>
+        <Button text="清空" onAction="#handleSelectAll" styleClass="tool-button"/>
+        <Button text="基本字段" onAction="#handleImportBasicFields" styleClass="tool-button"/>
+        <Button text="导入模板" onAction="#handleImportTemplate" styleClass="tool-button"/>
+    </ToolBar>
+    
+    <!-- 字段表格 -->
+    <TableView fx:id="fieldsTable" VBox.vgrow="ALWAYS" editable="true">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="字段名" prefWidth="120" editable="true"/>
+            <TableColumn fx:id="labelColumn" text="中文名" prefWidth="120" editable="true"/>
+            <TableColumn fx:id="typeColumn" text="字段类型" prefWidth="100" editable="true"/>
+            <TableColumn fx:id="dbTypeColumn" text="数据库类型" prefWidth="120" editable="true"/>
+            <TableColumn fx:id="lengthColumn" text="长度" prefWidth="70" editable="true"/>
+            <TableColumn fx:id="requiredColumn" text="必填" prefWidth="60" editable="true" styleClass="required-column-header"/>
+            <TableColumn fx:id="primaryKeyColumn" text="主键" prefWidth="60" editable="true"/>
+            <TableColumn fx:id="uiTypeColumn" text="UI类型" prefWidth="80" editable="true"/>
+            <TableColumn fx:id="editableColumn" text="可编辑" prefWidth="60" editable="true"/>
+        </columns>
+        <placeholder>
+            <Label text="暂无字段，点击 添加字段 按钮添加"/>
+        </placeholder>
+    </TableView>
+    
+    <!-- 底部提示 -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="fieldCountLabel" text="共 0 个字段" styleClass="info-label"/>
+        <Separator orientation="VERTICAL"/>
+        <Label text="提示：选中行后点击 编辑 按钮进入编辑，修改后点击 保存 提交" styleClass="hint-label"/>
+    </HBox>
+    
+</VBox>
