@@ -2,6 +2,7 @@ package com.nc5.generator.fx.controller;
 
 import com.nc5.generator.fx.model.BillConfigModel;
 import com.nc5.generator.fx.CodeGeneratorApp;
+import com.nc5.generator.config.ConfigManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -24,10 +25,22 @@ public class GenerateController {
     @FXML private CheckBox syncAfterGenerate;
 
     private BillConfigModel billConfigModel;
+    
+    // 配置管理器
+    private final ConfigManager configManager = ConfigManager.getInstance();
 
     @FXML
     public void initialize() {
-        // 初始化时不需要特殊处理
+        // 绑定UI控件到配置管理器（单向绑定，避免循环更新）
+        outputDirField.textProperty().bindBidirectional(configManager.outputDirProperty());
+        projectSrcField.textProperty().bindBidirectional(configManager.sourcePathProperty());
+        syncAfterGenerate.selectedProperty().bindBidirectional(configManager.syncAfterGenerateProperty());
+        generateClientCheck.selectedProperty().bindBidirectional(configManager.generateClientProperty());
+        generateBusinessCheck.selectedProperty().bindBidirectional(configManager.generateBusinessProperty());
+        generateMetadataCheck.selectedProperty().bindBidirectional(configManager.generateMetadataProperty());
+        
+        // 添加配置变更监听器：任意配置变化后自动保存全局配置
+        configManager.addChangeListener(this::saveGlobalConfig);
     }
 
     /**
@@ -35,51 +48,75 @@ public class GenerateController {
      */
     public void setBillConfigModel(BillConfigModel model) {
         this.billConfigModel = model;
-        bindFields();
-    }
 
-    /**
-     * 绑定字段到模型
-     */
-    private void bindFields() {
-        if (billConfigModel == null) {
-            return;
+        // 将 ConfigManager 的属性同步到 billConfigModel.globalConfigModel
+        if (model != null) {
+            // 使用 GlobalConfigModel 承载全局配置，避免在 BillConfigModel 中展开具体字段
+            model.getGlobalConfigModel().setGenerateClient(configManager.isGenerateClient());
+            model.getGlobalConfigModel().setGenerateBusiness(configManager.isGenerateBusiness());
+            model.getGlobalConfigModel().setGenerateMetadata(configManager.isGenerateMetadata());
+            model.getGlobalConfigModel().setAuthor(configManager.getAuthor());
+            model.getGlobalConfigModel().setSourcePath(configManager.getSourcePath());
+            model.getGlobalConfigModel().setOutputDir(configManager.getOutputDir());
+            model.getGlobalConfigModel().setSyncAfterGenerate(configManager.isSyncAfterGenerate());
+
+            // 监听 ConfigManager 的变化并同步到 GlobalConfigModel
+            configManager.outputDirProperty().addListener((obs, oldVal, newVal) -> {
+                model.getGlobalConfigModel().setOutputDir(newVal);
+            });
+            configManager.sourcePathProperty().addListener((obs, oldVal, newVal) -> {
+                model.getGlobalConfigModel().setSourcePath(newVal);
+            });
+            configManager.syncAfterGenerateProperty().addListener((obs, oldVal, newVal) -> {
+                model.getGlobalConfigModel().setSyncAfterGenerate(newVal);
+            });
+            configManager.generateClientProperty().addListener((obs, oldVal, newVal) -> {
+                model.getGlobalConfigModel().setGenerateClient(newVal);
+            });
+            configManager.generateBusinessProperty().addListener((obs, oldVal, newVal) -> {
+                model.getGlobalConfigModel().setGenerateBusiness(newVal);
+            });
+            configManager.generateMetadataProperty().addListener((obs, oldVal, newVal) -> {
+                model.getGlobalConfigModel().setGenerateMetadata(newVal);
+            });
+            configManager.authorProperty().addListener((obs, oldVal, newVal) -> {
+                model.getGlobalConfigModel().setAuthor(newVal);
+            });
         }
 
-        System.out.println("[GenerateController] 开始绑定字段");
-
-        // 先设置字段的初始值，确保双向绑定前字段有正确的值
-        String outputDirValue = billConfigModel.getOutputDir();
-        String sourcePathValue = billConfigModel.getSourcePath();
-
-        outputDirField.setText(outputDirValue);
-        projectSrcField.setText(sourcePathValue);
-
-        // 生成选项复选框双向绑定
-        generateClientCheck.selectedProperty().bindBidirectional(billConfigModel.generateClientProperty());
-        generateBusinessCheck.selectedProperty().bindBidirectional(billConfigModel.generateBusinessProperty());
-        generateMetadataCheck.selectedProperty().bindBidirectional(billConfigModel.generateMetadataProperty());
-
-        // 输出配置字段双向绑定
-        outputDirField.textProperty().bindBidirectional(billConfigModel.outputDirProperty());
-        projectSrcField.textProperty().bindBidirectional(billConfigModel.sourcePathProperty());
-        syncAfterGenerate.selectedProperty().bindBidirectional(billConfigModel.syncAfterGenerateProperty());
-
-        // 不再添加监听器，避免在初始化时触发保存
-        // 全局配置将在应用退出时统一保存
+        // 使用新的配置管理器，配置变更会通过监听器自动处理
+        // 不再依赖“保存”按钮，改为自动保存，无需额外初始化
     }
 
     /**
      * 手动保存全局配置
-     * 可以在需要时调用，例如：在浏览目录后立即保存
+     * 也作为配置变更时的自动保存入口
      */
     public void saveGlobalConfig() {
         try {
-            if (CodeGeneratorApp.getGlobalConfigManager() != null) {
-                CodeGeneratorApp.getGlobalConfigManager().setGlobalConfig(
-                    billConfigModel.getGlobalConfigModel().toGlobalConfig()
-                );
-                CodeGeneratorApp.getGlobalConfigManager().saveGlobalConfig();
+            // 1) 保存到 ConfigManager (Preferences)，用于轻量本地记忆
+            configManager.saveToPreferences();
+
+            // 2) 同步到 GlobalConfigManager (INI 文件) 作为真正的全局配置
+            com.nc5.generator.config.GlobalConfigManager globalConfigManager = CodeGeneratorApp.getGlobalConfigManager();
+            if (globalConfigManager != null) {
+                // 以 GlobalConfigManager 当前持有的 GlobalConfig 为基准，只更新真正的全局项
+                com.nc5.generator.config.GlobalConfig globalConfig = globalConfigManager.getGlobalConfig();
+                if (globalConfig == null) {
+                    globalConfig = new com.nc5.generator.config.GlobalConfig();
+                }
+
+                // 从 ConfigManager 写入最新值
+                globalConfig.setOutputDir(configManager.getOutputDir());
+                globalConfig.setSourcePath(configManager.getSourcePath());
+                globalConfig.setAuthor(configManager.getAuthor());
+                globalConfig.setSyncAfterGenerate(configManager.isSyncAfterGenerate());
+                globalConfig.setGenerateClient(configManager.isGenerateClient());
+                globalConfig.setGenerateBusiness(configManager.isGenerateBusiness());
+                globalConfig.setGenerateMetadata(configManager.isGenerateMetadata());
+
+                globalConfigManager.setGlobalConfig(globalConfig);
+                globalConfigManager.saveGlobalConfig();
             }
         } catch (Exception e) {
             e.printStackTrace();

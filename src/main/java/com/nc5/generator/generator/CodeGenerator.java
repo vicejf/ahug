@@ -78,9 +78,6 @@ public class CodeGenerator {
         // 生成VO层代码（必须生成）
         voGenerator.generate(billConfig);
 
-        // 生成接口层代码（默认生成）
-        ItfGenerator.generate(billConfig, new File(outputDir));
-
         // 生成客户端代码（从 GlobalConfig 获取开关）
         if (billConfig.isGenerateClient()) {
             clientGenerator.generate(billConfig);
@@ -88,14 +85,17 @@ public class CodeGenerator {
 
         // 生成业务逻辑代码（从 GlobalConfig 获取开关）
         if (billConfig.isGenerateBusiness()) {
+            // 生成接口层代码
+            ItfGenerator.generate(billConfig, new File(outputDir));
+
             bsGenerator.generate(billConfig);
 
-            // 生成Impl层代码（默认生成）
+            // 生成Impl层代码
             ImplGenerator.generate(billConfig, null, new File(outputDir));
-        }
 
-        // 生成Rule层代码（默认生成）
-        RuleGenerator.generate(billConfig, new File(outputDir));
+            // 生成Rule层代码
+            RuleGenerator.generate(billConfig, new File(outputDir));
+        }
 
         logger.info("========================================");
         logger.info("代码生成完成！");

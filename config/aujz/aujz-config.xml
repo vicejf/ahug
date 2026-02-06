@@ -3,18 +3,18 @@
 <billConfig>
     <basicInfo>
         <!-- 单据基本信息 -->
-        <billCode>AUJY</billCode>
-        <billName>CESHI2</billName>
+        <billCode>AUJZ</billCode>
+        <billName>物料开封</billName>
         <module></module>
         <packageName></packageName>
-        <bodyCode>AUJYBVO</bodyCode>
-        <billType>multi</billType>
+        <bodyCode></bodyCode>
+        <billType>single</billType>
         <description></description>
     </basicInfo>
     <fieldPaths>
         <!-- 字段配置文件路径 -->
-        <headFieldsPath>AUJY.json</headFieldsPath>
-        <bodyFieldsPath>AUJYBVO.json</bodyFieldsPath>
+        <headFieldsPath>AUJZ.json</headFieldsPath>
+        <bodyFieldsPath>AUJZBVO.json</bodyFieldsPath>
     </fieldPaths>
     <globalConfig>
         <generateOptions>
@@ -22,7 +22,7 @@
             <generateClient>true</generateClient>
             <generateBusiness>true</generateBusiness>
             <generateMetadata>false</generateMetadata>
-            <syncAfterGenerate>false</syncAfterGenerate>
+            <syncAfterGenerate>true</syncAfterGenerate>
         </generateOptions>
         <metadataSwitches>
             <!-- 元数据生成开关 -->

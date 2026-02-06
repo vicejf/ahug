@@ -23,7 +23,7 @@ public class BillConfigModel {
     private final StringProperty billType = new SimpleStringProperty("single");
     private final StringProperty description = new SimpleStringProperty("");
 
-    // 全局配置模型
+    // 全局配置模型（单独的 UI 模型，避免在本类中展开具体字段）
     private final GlobalConfigModel globalConfigModel = new GlobalConfigModel();
 
     private final ObservableList<FieldConfigModel> headFields = FXCollections.observableArrayList();
@@ -53,11 +53,6 @@ public class BillConfigModel {
         bodyFieldsPath.set(config.getBodyFieldsPath() != null ? config.getBodyFieldsPath() : "");
         billType.set(config.getBillType() != null ? config.getBillType() : "single");
         description.set(config.getDescription() != null ? config.getDescription() : "");
-
-        // 加载全局配置
-        if (config.getGlobalConfig() != null) {
-            globalConfigModel.fromGlobalConfig(config.getGlobalConfig());
-        }
 
         // 加载表头字段
         headFields.clear();
@@ -115,9 +110,6 @@ public class BillConfigModel {
         config.setBodyFieldsPath(bodyFieldsPath.get());
         config.setBillType(billType.get());
         config.setDescription(description.get());
-
-        // 设置全局配置
-        config.setGlobalConfig(globalConfigModel.toGlobalConfig());
 
         // 转换表头字段
         for (FieldConfigModel model : headFields) {
@@ -207,15 +199,6 @@ public class BillConfigModel {
     public StringProperty billTypeProperty() { return billType; }
     public StringProperty descriptionProperty() { return description; }
 
-    // 全局配置属性的代理方法
-    public BooleanProperty generateClientProperty() { return globalConfigModel.generateClientProperty(); }
-    public BooleanProperty generateBusinessProperty() { return globalConfigModel.generateBusinessProperty(); }
-    public BooleanProperty generateMetadataProperty() { return globalConfigModel.generateMetadataProperty(); }
-    public StringProperty authorProperty() { return globalConfigModel.authorProperty(); }
-    public StringProperty sourcePathProperty() { return globalConfigModel.sourcePathProperty(); }
-    public StringProperty outputDirProperty() { return globalConfigModel.outputDirProperty(); }
-    public BooleanProperty syncAfterGenerateProperty() { return globalConfigModel.syncAfterGenerateProperty(); }
-
     // ObservableList getters
     public ObservableList<FieldConfigModel> getHeadFields() { return headFields; }
     public ObservableList<FieldConfigModel> getBodyFields() { return bodyFields; }
@@ -234,16 +217,7 @@ public class BillConfigModel {
     public String getBillType() { return billType.get(); }
     public String getDescription() { return description.get(); }
 
-    // 全局配置属性的代理 getter 方法
-    public boolean isGenerateClient() { return globalConfigModel.isGenerateClient(); }
-    public boolean isGenerateBusiness() { return globalConfigModel.isGenerateBusiness(); }
-    public boolean isGenerateMetadata() { return globalConfigModel.isGenerateMetadata(); }
-    public String getAuthor() { return globalConfigModel.getAuthor(); }
-    public String getSourcePath() { return globalConfigModel.getSourcePath(); }
-    public String getOutputDir() { return globalConfigModel.getOutputDir(); }
-    public boolean isSyncAfterGenerate() { return globalConfigModel.isSyncAfterGenerate(); }
-
-    // 全局配置模型的 getter
+    // 全局配置模型的 getter（外部按需直接使用 GlobalConfigModel）
     public GlobalConfigModel getGlobalConfigModel() {
         return globalConfigModel;
     }
@@ -260,12 +234,4 @@ public class BillConfigModel {
     public void setBillType(String value) { billType.set(value); }
     public void setDescription(String value) { description.set(value); }
 
-    // 全局配置属性的代理 setter 方法
-    public void setGenerateClient(boolean value) { globalConfigModel.setGenerateClient(value); }
-    public void setGenerateBusiness(boolean value) { globalConfigModel.setGenerateBusiness(value); }
-    public void setGenerateMetadata(boolean value) { globalConfigModel.setGenerateMetadata(value); }
-    public void setAuthor(String value) { globalConfigModel.setAuthor(value); }
-    public void setSourcePath(String value) { globalConfigModel.setSourcePath(value); }
-    public void setOutputDir(String value) { globalConfigModel.setOutputDir(value); }
-    public void setSyncAfterGenerate(boolean value) { globalConfigModel.setSyncAfterGenerate(value); }
 }

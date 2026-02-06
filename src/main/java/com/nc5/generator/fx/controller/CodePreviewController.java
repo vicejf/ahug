@@ -1,5 +1,9 @@
 package com.nc5.generator.fx.controller;
 
+import com.nc5.generator.config.ConfigManager;
+import com.nc5.generator.config.GlobalConfig;
+import com.nc5.generator.config.GlobalConfigManager;
+import com.nc5.generator.fx.CodeGeneratorApp;
 import com.nc5.generator.fx.model.BillConfigModel;
 import com.nc5.generator.fx.util.NotificationUtil;
 import javafx.fxml.FXML;
@@ -28,15 +32,18 @@ public class CodePreviewController {
 
     private BillConfigModel billConfigModel;
     private MainController mainController;
-    private File outputDir = new File("output");
+    private File outputDir;
     private Map<TreeItem<String>, String> treeItemPathMap = new HashMap<>();
 
     @FXML
     public void initialize() {
+        // 从全局配置文件中读取输出目录
+        loadOutputDirFromGlobalConfig();
+        
         setupFileTree();
 
-        // 如果输出目录存在且有文件，自动刷新文件树
-        if (outputDir.exists() && outputDir.isDirectory()) {
+        // 如果输出目录存在且有文件,自动刷新文件树
+        if (outputDir != null && outputDir.exists() && outputDir.isDirectory()) {
             refreshFileTree();
         }
     }
@@ -50,9 +57,32 @@ public class CodePreviewController {
     }
 
     /**
-     * 从配置文件加载后更新UI（保留此方法供兼容）
+     * 从全局配置文件中加载输出目录
+     */
+    private void loadOutputDirFromGlobalConfig() {
+        GlobalConfigManager globalConfigManager = CodeGeneratorApp.getGlobalConfigManager();
+        if (globalConfigManager == null) {
+            // 如果全局配置管理器不存在,使用默认输出目录
+            outputDir = new File("output");
+            return;
+        }
+
+        // 直接从全局配置文件中读取最新配置
+        GlobalConfig globalConfig = globalConfigManager.loadOrCreateDefault();
+        if (globalConfig != null && globalConfig.getOutputDir() != null && !globalConfig.getOutputDir().isEmpty()) {
+            outputDir = new File(globalConfig.getOutputDir());
+        } else {
+            // 如果全局配置中没有输出目录,使用默认值
+            outputDir = new File("output");
+        }
+    }
+
+    /**
+     * 从配置文件加载后更新UI(保留此方法供兼容)
      */
     public void updateUIFromModel() {
+        // 重新从全局配置文件加载输出目录
+        loadOutputDirFromGlobalConfig();
         // 预览标签页无需特殊处理
         refreshFileTree();
     }
@@ -97,6 +127,11 @@ public class CodePreviewController {
      * 加载文件预览
      */
     private void loadFilePreview(String relativePath) {
+        if (outputDir == null) {
+            codePreview.setText("输出目录未配置");
+            return;
+        }
+        
         // 根据相对路径构建完整路径
         Path filePath = outputDir.toPath().resolve(relativePath);
 
@@ -137,6 +172,11 @@ public class CodePreviewController {
 
     @FXML
     private void handleOpenDir() {
+        if (outputDir == null) {
+            NotificationUtil.showError("输出目录未配置");
+            return;
+        }
+        
         // 获取当前选中的文件
         TreeItem<String> selectedItem = fileTree.getSelectionModel().getSelectedItem();
 
@@ -210,6 +250,11 @@ public class CodePreviewController {
      * 处理删除文件
      */
     private void handleDeleteFile() {
+        if (outputDir == null) {
+            NotificationUtil.showError("输出目录未配置");
+            return;
+        }
+        
         TreeItem<String> selectedItem = fileTree.getSelectionModel().getSelectedItem();
         if (selectedItem == null) {
             NotificationUtil.showError("请先选择一个文件");
@@ -256,13 +301,16 @@ public class CodePreviewController {
      * 刷新文件树
      */
     public void refreshFileTree() {
+        // 重新从全局配置文件加载输出目录,确保使用最新配置
+        loadOutputDirFromGlobalConfig();
+        
         // 清空路径映射
         treeItemPathMap.clear();
 
         TreeItem<String> root = new TreeItem<>("生成的文件");
         root.setExpanded(true);
 
-        if (outputDir.exists() && outputDir.isDirectory()) {
+        if (outputDir != null && outputDir.exists() && outputDir.isDirectory()) {
             addFilesToTree(root, outputDir, "");
         }
 

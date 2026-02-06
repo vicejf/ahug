@@ -1,6 +1,7 @@
 package com.nc5.generator.fx.controller;
 
 import com.nc5.generator.config.BillType;
+import com.nc5.generator.config.ConfigManager;
 import com.nc5.generator.fx.model.BillConfigModel;
 import com.nc5.generator.fx.util.NotificationUtil;
 import javafx.fxml.FXML;
@@ -22,6 +23,9 @@ public class BasicInfoController {
     @FXML private TextField authorField;
 
     private BillConfigModel billConfigModel;
+
+    // 全局配置管理器（用于作者等全局信息）
+    private final ConfigManager configManager = ConfigManager.getInstance();
 
     @FXML
     public void initialize() {
@@ -79,8 +83,8 @@ public class BasicInfoController {
         billNameField.textProperty().bindBidirectional(billConfigModel.billNameProperty());
         bodyCodeField.textProperty().bindBidirectional(billConfigModel.bodyCodeProperty());
         headCodeField.textProperty().bindBidirectional(billConfigModel.headCodeProperty());
-        // 作者字段单向绑定，不可编辑
-        authorField.textProperty().bind(billConfigModel.authorProperty());
+        // 作者字段绑定到全局配置（而非单据配置）
+        authorField.textProperty().bind(configManager.authorProperty());
         authorField.setEditable(false);
 
         // 下拉框双向绑定

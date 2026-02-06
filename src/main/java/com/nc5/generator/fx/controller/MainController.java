@@ -1,7 +1,9 @@
 package com.nc5.generator.fx.controller;
 
 import com.nc5.generator.config.BillConfig;
+import com.nc5.generator.config.ConfigManager;
 import com.nc5.generator.config.GlobalConfig;
+import com.nc5.generator.config.GlobalConfigManager;
 import com.nc5.generator.fx.model.BillConfigModel;
 import com.nc5.generator.fx.util.NotificationUtil;
 import com.nc5.generator.service.CodeGenerateService;
@@ -108,12 +110,7 @@ public class MainController {
         billConfigModel.packageNameProperty().addListener((obs, old, val) -> setModified(true));
         billConfigModel.bodyCodeProperty().addListener((obs, old, val) -> setModified(true));
         billConfigModel.billTypeProperty().addListener((obs, old, val) -> setModified(true));
-        billConfigModel.generateClientProperty().addListener((obs, old, val) -> setModified(true));
-        billConfigModel.generateBusinessProperty().addListener((obs, old, val) -> setModified(true));
-        billConfigModel.generateMetadataProperty().addListener((obs, old, val) -> setModified(true));
-        billConfigModel.authorProperty().addListener((obs, old, val) -> setModified(true));
         billConfigModel.descriptionProperty().addListener((obs, old, val) -> setModified(true));
-        billConfigModel.sourcePathProperty().addListener((obs, old, val) -> setModified(true));
 
         billConfigModel.getHeadFields().addListener((javafx.collections.ListChangeListener.Change<?> c) -> setModified(true));
         billConfigModel.getBodyFields().addListener((javafx.collections.ListChangeListener.Change<?> c) -> setModified(true));
@@ -227,7 +224,16 @@ public class MainController {
      * 加载全局配置到模型
      */
     private void loadGlobalConfigToModel() {
-        GlobalConfig globalConfig = CodeGeneratorApp.getGlobalConfig();
+        // 使用全局唯一的 GlobalConfigManager 加载全局配置
+        GlobalConfigManager globalConfigManager = CodeGeneratorApp.getGlobalConfigManager();
+        if (globalConfigManager == null) {
+            // 理论上不会出现（在应用 init 阶段已初始化），此处仅作兜底
+            globalConfigManager = new GlobalConfigManager();
+            globalConfigManager.loadOrCreateDefault();
+        }
+
+        // 从 GlobalConfigManager 获取全局配置并设置到模型中
+        GlobalConfig globalConfig = globalConfigManager.getGlobalConfig();
         if (globalConfig != null) {
             // 将全局配置的值设置到GlobalConfigModel中
             logger.info("加载全局配置到模型 - Author: {}, OutputDir: {}, SourcePath: {}",
@@ -235,11 +241,26 @@ public class MainController {
 
             billConfigModel.getGlobalConfigModel().fromGlobalConfig(globalConfig);
 
-            // 验证是否设置成功
-            logger.info("验证模型中的值 - OutputDir: {}, SourcePath: {}",
-                billConfigModel.getOutputDir(), billConfigModel.getSourcePath());
+            // 同时更新 ConfigManager 以便 GenerateController 能正确显示
+            ConfigManager.getInstance().setConfigValues(
+                globalConfig.getOutputDir() != null ? globalConfig.getOutputDir() : "",
+                globalConfig.getSourcePath() != null ? globalConfig.getSourcePath() : "",
+                globalConfig.isSyncAfterGenerate(),
+                globalConfig.isGenerateClient(),
+                globalConfig.isGenerateBusiness(),
+                globalConfig.isGenerateMetadata(),
+                globalConfig.getAuthor() != null ? globalConfig.getAuthor() : "Flynn Chen"
+            );
 
-            logger.debug("已加载全局配置到模型");
+            // 验证是否设置成功（使用 GlobalConfigModel 和 ConfigManager）
+            logger.info("验证模型中的值 - OutputDir: {}, SourcePath: {}",
+                billConfigModel.getGlobalConfigModel().getOutputDir(),
+                billConfigModel.getGlobalConfigModel().getSourcePath());
+            logger.info("验证ConfigManager中的值 - OutputDir: {}, SourcePath: {}",
+                ConfigManager.getInstance().getOutputDir(),
+                ConfigManager.getInstance().getSourcePath());
+
+            logger.debug("已加载全局配置到 GlobalConfigModel 和 ConfigManager");
         } else {
             logger.warn("全局配置为空，无法加载到模型");
         }
@@ -426,6 +447,10 @@ public class MainController {
                     return;
                 }
             }
+        }
+        // 保存全局配置（包括syncAfterGenerate等设置）
+        if (generateTabController != null) {
+            generateTabController.saveGlobalConfig();
         }
         Platform.exit();
     }

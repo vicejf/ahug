@@ -1,8 +1,7 @@
 package com.nc5.generator.service;
 
 import com.nc5.generator.config.BillConfig;
-import com.nc5.generator.config.JsonConfigReader;
-import com.nc5.generator.config.JsonConfigWriter;
+import com.nc5.generator.config.JsonConfigFile;
 import com.nc5.generator.config.XmlConfigParser;
 import com.nc5.generator.config.XmlConfigWriter;
 import com.nc5.generator.fx.model.BillConfigModel;
@@ -30,8 +29,13 @@ public class ConfigFileService {
     private static final Logger logger = LoggerFactory.getLogger(ConfigFileService.class);
     private static final int MAX_RECENT_FILES = 10;
     private static final String RECENT_FILES_FILENAME = "recent_files.txt";
-    
+
+    // 单据配置模型（承载当前正在编辑的配置）
     private final BillConfigModel billConfigModel;
+
+    // JSON 字段配置读写器（单一入口，避免在各处重复 new）
+    private final JsonConfigFile jsonConfigFile = new JsonConfigFile();
+
     private final ObservableList<String> recentFiles = FXCollections.observableArrayList();
     private File currentConfigFile;
     
@@ -143,15 +147,13 @@ public class ConfigFileService {
     private BillConfig loadFromJson(String filePath, File parentDir) throws Exception {
         String xmlPath = filePath.substring(0, filePath.length() - 5) + ".xml";
         File xmlFile = new File(xmlPath);
-        
         BillConfig config;
         if (xmlFile.exists()) {
             config = new XmlConfigParser().parse(xmlPath);
-            BillConfig jsonConfig = new JsonConfigReader().readFieldsOnly(filePath);
-            if (jsonConfig.getHeadFields() != null) config.setHeadFields(jsonConfig.getHeadFields());
-            if (jsonConfig.getBodyFields() != null) config.setBodyFields(jsonConfig.getBodyFields());
+            // 使用 JSON 文件中的字段信息覆盖 XML 中的字段定义
+            mergeFieldsFromJsonFile(config, new File(filePath), "JSON");
         } else {
-            config = new JsonConfigReader().readFieldsOnly(filePath);
+            config = jsonConfigFile.readFieldsOnly(filePath);
         }
         return config;
     }
@@ -162,33 +164,17 @@ public class ConfigFileService {
     }
     
     private void loadFieldConfigs(BillConfig config, File parentDir) {
-        JsonConfigReader jsonReader = new JsonConfigReader();
-        
         if (config.getHeadFieldsPath() != null && !config.getHeadFieldsPath().isEmpty()) {
             File headFieldsFile = resolveFile(config.getHeadFieldsPath(), parentDir);
             if (headFieldsFile.exists()) {
-                try {
-                    BillConfig headConfig = jsonReader.readFieldsOnly(headFieldsFile.getAbsolutePath());
-                    if (headConfig.getHeadFields() != null && !headConfig.getHeadFields().isEmpty()) {
-                        config.setHeadFields(headConfig.getHeadFields());
-                    }
-                } catch (Exception e) {
-                    logger.warn("加载表头字段配置失败: {}", headFieldsFile.getAbsolutePath(), e);
-                }
+                mergeFieldsFromJsonFile(config, headFieldsFile, "表头");
             }
         }
-        
+
         if (config.getBodyFieldsPath() != null && !config.getBodyFieldsPath().isEmpty()) {
             File bodyFieldsFile = resolveFile(config.getBodyFieldsPath(), parentDir);
             if (bodyFieldsFile.exists()) {
-                try {
-                    BillConfig bodyConfig = jsonReader.readFieldsOnly(bodyFieldsFile.getAbsolutePath());
-                    if (bodyConfig.getBodyFields() != null && !bodyConfig.getBodyFields().isEmpty()) {
-                        config.setBodyFields(bodyConfig.getBodyFields());
-                    }
-                } catch (Exception e) {
-                    logger.warn("加载表体字段配置失败: {}", bodyFieldsFile.getAbsolutePath(), e);
-                }
+                mergeFieldsFromJsonFile(config, bodyFieldsFile, "表体");
             }
         }
     }
@@ -220,15 +206,14 @@ public class ConfigFileService {
             
             config.setHeadFieldsPath(headFieldsFileName);
             config.setBodyFieldsPath(bodyFieldsFileName);
-            
+
             new XmlConfigWriter().write(config, xmlPath);
-            
-            JsonConfigWriter jsonWriter = new JsonConfigWriter();
+
             if (config.getHeadFields() != null && !config.getHeadFields().isEmpty()) {
-                jsonWriter.writeHeadFields(config, headFieldsPath);
+                jsonConfigFile.writeHeadFields(config, headFieldsPath);
             }
             if (config.getBodyFields() != null && !config.getBodyFields().isEmpty()) {
-                jsonWriter.writeBodyFields(config, bodyFieldsPath);
+                jsonConfigFile.writeBodyFields(config, bodyFieldsPath);
             }
             
             currentConfigFile = new File(xmlPath);
@@ -258,6 +243,29 @@ public class ConfigFileService {
         if (bodyCode != null && !bodyCode.isEmpty()) return bodyCode + ".json";
         if (billCode != null && !billCode.isEmpty()) return billCode + "BVO.json";
         return "body.json";
+    }
+
+    /**
+     * 从指定 JSON 字段配置文件中读取字段，并合并到目标 BillConfig 中。
+     * 该方法是 JsonConfigFile 的唯一调用入口，保证字段 JSON 的读写逻辑集中在本服务层。
+     *
+     * @param target    需要合并字段配置的 BillConfig
+     * @param jsonFile  字段配置 JSON 文件
+     * @param fieldType 日志用字段类型描述（如“表头”、“表体”、“JSON”）
+     */
+    private void mergeFieldsFromJsonFile(BillConfig target, File jsonFile, String fieldType) {
+        try {
+            BillConfig jsonConfig = jsonConfigFile.readFieldsOnly(jsonFile.getAbsolutePath());
+
+            if (jsonConfig.getHeadFields() != null && !jsonConfig.getHeadFields().isEmpty()) {
+                target.setHeadFields(jsonConfig.getHeadFields());
+            }
+            if (jsonConfig.getBodyFields() != null && !jsonConfig.getBodyFields().isEmpty()) {
+                target.setBodyFields(jsonConfig.getBodyFields());
+            }
+        } catch (Exception e) {
+            logger.warn("加载{}字段配置失败: {}", fieldType, jsonFile.getAbsolutePath(), e);
+        }
     }
     
     // ==================== 对话框 ====================

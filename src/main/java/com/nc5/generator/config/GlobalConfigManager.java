@@ -27,13 +27,20 @@ public class GlobalConfigManager {
     }
 
     /**
+     * 加载或创建默认的全局配置（语义化入口）
+     * 等价于 {@link #initialize()}，供上层代码调用时表达更清晰的意图。
+     */
+    public GlobalConfig loadOrCreateDefault() {
+        return initialize();
+    }
+
+    /**
      * 初始化全局配置
      * 如果配置文件不存在则创建默认配置
      */
     public GlobalConfig initialize() {
         if (globalConfigFile.exists()) {
             loadGlobalConfig();
-            logger.info("已加载全局配置: {}", globalConfigFile.getAbsolutePath());
         } else {
             createDefaultGlobalConfig();
             logger.info("已创建默认全局配置: {}", globalConfigFile.getAbsolutePath());
@@ -81,10 +88,8 @@ public class GlobalConfigManager {
 
             // 注意：元数据配置（metadata.*, reference.*, connection.*）属于单据级别配置，
             // 从单据XML文件中读取，不存储在全局INI配置中
-
-            logger.debug("全局配置加载成功");
         } catch (Exception e) {
-            logger.error("加载全局配置失败，将创建默认配置", e);
+            logger.error("Failed to load GlobalConfig, creating default configuration", e);
             createDefaultGlobalConfig();
         }
     }
@@ -156,7 +161,7 @@ public class GlobalConfigManager {
      */
     public void saveGlobalConfig() {
         if (globalConfig == null) {
-            logger.warn("全局配置为空，无法保存");
+            logger.warn("GlobalConfig is null, cannot save");
             return;
         }
 
@@ -185,9 +190,9 @@ public class GlobalConfigManager {
                 writer.write("project.sourcePath=" + getStringValue(globalConfig.getSourcePath()) + "\n");
             }
 
-            logger.info("全局配置已保存: {}", globalConfigFile.getAbsolutePath());
+            logger.info("GlobalConfig saved successfully");
         } catch (Exception e) {
-            logger.error("保存全局配置失败", e);
+            logger.error("Failed to save GlobalConfig", e);
         }
     }
 

@@ -1,6 +1,8 @@
 package com.nc5.generator.service;
 
 import com.nc5.generator.config.BillConfig;
+import com.nc5.generator.config.GlobalConfig;
+import com.nc5.generator.fx.CodeGeneratorApp;
 import com.nc5.generator.generator.CodeGenerator;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -103,7 +105,18 @@ public class CodeGenerateService {
                     updateMessage("初始化代码生成器...");
                     updateProgress(0.1, 1.0);
 
-                    CodeGenerator generator = new CodeGenerator(outputDir.getAbsolutePath());
+                    // 为当前单据应用全局配置（生成开关、输出路径等），但不影响单据XML的保存格式
+                    // 必须在创建 CodeGenerator 之前调用，以便使用正确的输出目录
+                    applyGlobalConfigForGeneration(config);
+
+                    // 从全局配置获取输出目录
+                    File actualOutputDir = outputDir;
+                    if (config.getGlobalConfig() != null && config.getGlobalConfig().getOutputDir() != null 
+                            && !config.getGlobalConfig().getOutputDir().isEmpty()) {
+                        actualOutputDir = new File(config.getGlobalConfig().getOutputDir());
+                    }
+
+                    CodeGenerator generator = new CodeGenerator(actualOutputDir.getAbsolutePath());
 
                     updateMessage("生成代码中...");
                     updateProgress(0.3, 1.0);
@@ -117,21 +130,22 @@ public class CodeGenerateService {
                     
                     // 统计代码
                     CodeStatisticsService statsService = new CodeStatisticsService();
-                    CodeStatisticsService.CodeStatistics stats = statsService.countJavaFiles(outputDir);
+                    CodeStatisticsService.CodeStatistics stats = statsService.countJavaFiles(actualOutputDir);
 
+                    final File finalOutputDir = actualOutputDir;
                     Platform.runLater(() -> {
                         log("代码生成成功！");
-                        log("输出目录: " + outputDir.getAbsolutePath());
+                        log("输出目录: " + finalOutputDir.getAbsolutePath());
                         updateStatus("代码生成完成");
                     });
 
-                    return new GenerationResult(true, duration, stats, null);
+                    return new GenerationResult(true, duration, stats, null, finalOutputDir);
 
                 } catch (Exception e) {
                     Platform.runLater(() -> {
                         log("生成失败: " + e.getMessage());
                     });
-                    return new GenerationResult(false, 0, null, e.getMessage());
+                    return new GenerationResult(false, 0, null, e.getMessage(), null);
                 }
             }
         };
@@ -217,7 +231,7 @@ public class CodeGenerateService {
             sb.append("代码: ").append(String.format("%,d", result.stats.codeLines)).append(" 行\n\n");
         }
         
-        sb.append("OutputPath: \n").append(outputDir.getAbsolutePath());
+        sb.append("OutputPath: \n").append(result.outputDir != null ? result.outputDir.getAbsolutePath() : outputDir.getAbsolutePath());
         
         return sb.toString();
     }
@@ -235,6 +249,39 @@ public class CodeGenerateService {
             long seconds = (durationMs % 60000) / 1000;
             return minutes + " 分 " + seconds + " 秒";
         }
+    }
+
+    /**
+     * 在代码生成前,直接从全局配置文件中读取配置并应用到当前单据配置中,
+     * 仅用于本次生成过程,不影响单据XML的保存/加载。
+     */
+    private void applyGlobalConfigForGeneration(BillConfig billConfig) {
+        com.nc5.generator.config.GlobalConfigManager globalConfigManager = CodeGeneratorApp.getGlobalConfigManager();
+        if (globalConfigManager == null) {
+            return;
+        }
+    
+        // 直接从全局配置文件中重新加载最新配置
+        GlobalConfig appGlobal = globalConfigManager.loadOrCreateDefault();
+        if (appGlobal == null) {
+            return;
+        }
+    
+        // 以单据自身已有的 GlobalConfig 为基础(保留元数据相关信息),覆盖生成相关的全局配置
+        GlobalConfig billGlobal = billConfig.getGlobalConfig();
+        if (billGlobal == null) {
+            billGlobal = new GlobalConfig();
+        }
+    
+        billGlobal.setOutputDir(appGlobal.getOutputDir());
+        billGlobal.setSourcePath(appGlobal.getSourcePath());
+        billGlobal.setAuthor(appGlobal.getAuthor());
+        billGlobal.setSyncAfterGenerate(appGlobal.isSyncAfterGenerate());
+        billGlobal.setGenerateClient(appGlobal.isGenerateClient());
+        billGlobal.setGenerateBusiness(appGlobal.isGenerateBusiness());
+        billGlobal.setGenerateMetadata(appGlobal.isGenerateMetadata());
+    
+        billConfig.setGlobalConfig(billGlobal);
     }
 
     /**
@@ -353,12 +400,14 @@ public class CodeGenerateService {
         final long duration;
         final CodeStatisticsService.CodeStatistics stats;
         final String errorMessage;
+        final File outputDir;
         
-        GenerationResult(boolean success, long duration, CodeStatisticsService.CodeStatistics stats, String errorMessage) {
+        GenerationResult(boolean success, long duration, CodeStatisticsService.CodeStatistics stats, String errorMessage, File outputDir) {
             this.success = success;
             this.duration = duration;
             this.stats = stats;
             this.errorMessage = errorMessage;
+            this.outputDir = outputDir;
         }
     }
 }
