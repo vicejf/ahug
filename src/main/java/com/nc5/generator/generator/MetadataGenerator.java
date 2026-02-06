@@ -4,6 +4,7 @@ import com.nc5.generator.config.BillConfig;
 import com.nc5.generator.config.EnumConfig;
 import com.nc5.generator.config.FieldConfig;
 import com.nc5.generator.fx.util.UUIDUtil;
+import com.nc5.generator.template.TemplateSelector;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
@@ -31,8 +32,10 @@ public class MetadataGenerator {
      * 生成元数据文件
      */
     public void generate(BillConfig billConfig) throws Exception {
-        if (!billConfig.isSingleBill()) {
-            logger.info("跳过元数据生成：仅支持单表头类型的单据");
+        // 获取元数据模板
+        String metadataTemplatePath = TemplateSelector.getMetadataTemplate(billConfig);
+        if (metadataTemplatePath == null) {
+            logger.info("跳过元数据生成：当前单据类型不支持元数据生成");
             return;
         }
 
@@ -42,7 +45,7 @@ public class MetadataGenerator {
         initMetadataConfig(billConfig);
 
         // 获取模板
-        Template template = VelocityUtil.getTemplate("templates/METADATA/SingleHeadBMF.vm");
+        Template template = VelocityUtil.getTemplate(metadataTemplatePath);
 
         // 创建上下文
         VelocityContext context = new VelocityContext();

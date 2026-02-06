@@ -2,6 +2,7 @@ package com.nc5.generator.generator.rule;
 
 import com.nc5.generator.config.BillConfig;
 import com.nc5.generator.generator.VelocityUtil;
+import com.nc5.generator.template.TemplateSelector;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,7 +50,7 @@ public class RuleGenerator {
             vc.put("author", author);
             vc.put("date", dateStr);
 
-            Template template = VelocityUtil.getTemplate("templates/rule/Rule.vm");
+            Template template = VelocityUtil.getTemplate(TemplateSelector.getRuleTemplate(billConfig));
 
             String pkgPath = billConfig.getPackageName().replace('.', '/');
             String rulePath = outputDir.getAbsolutePath() + "/src/private/" + pkgPath + "/rule/" + billConfig.getModule().toLowerCase() + "/" + billConfig.getBillCode() + "/";

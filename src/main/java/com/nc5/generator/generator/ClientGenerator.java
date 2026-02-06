@@ -3,6 +3,7 @@ package com.nc5.generator.generator;
 import com.nc5.generator.config.BillConfig;
 import com.nc5.generator.template.TemplateContext;
 import com.nc5.generator.template.TemplateEngine;
+import com.nc5.generator.template.TemplateSelector;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,19 +64,8 @@ public class ClientGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        // 根据单据类型选择模板
-        String templatePath;
-        if (billConfig.isSingleBill()) {
-            templatePath = "templates/client/Controller_Single.vm";
-            logger.info("使用单表头模板生成Controller");
-        } else if (billConfig.isMultiBill()) {
-            templatePath = "templates/client/Controller_Multi.vm";
-            logger.info("使用多表体模板生成Controller");
-        } else {
-            templatePath = "templates/client/Controller_Single.vm";
-            logger.info("使用默认单表头模板生成Controller");
-        }
-
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getControllerTemplate(billConfig);
         String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/client/nc/ui/{module}/{billCode}/{billCode}Controller.java
@@ -96,7 +86,9 @@ public class ClientGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/client/IPrivateBtn.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getIPrivateBtnTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/client/nc/ui/{module}/{billCode}/{billCode}IPrivateBtn.java
         String outputPath = String.format("%s/src/client/nc/ui/%s/%s/%sIPrivateBtn.java",
@@ -117,19 +109,8 @@ public class ClientGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        // 根据单据类型选择模板
-        String templatePath;
-        if (billConfig.isSingleBill()) {
-            templatePath = "templates/client/ClientUI_Single.vm";
-            logger.info("使用单表头模板生成ClientUI");
-        } else if (billConfig.isMultiBill()) {
-            templatePath = "templates/client/ClientUI_Multi.vm";
-            logger.info("使用多表体模板生成ClientUI");
-        } else {
-            templatePath = "templates/client/ClientUI_Single.vm";
-            logger.info("使用默认单表头模板生成ClientUI");
-        }
-
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getClientUITemplate(billConfig);
         String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/client/nc/ui/{module}/{billCode}/{billCode}ClientUI.java
@@ -150,7 +131,9 @@ public class ClientGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/client/BusinessAction.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getBusinessActionTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/client/nc/ui/{module}/{billCode}/{billCode}BusinessAction.java
         String outputPath = String.format("%s/src/client/nc/ui/%s/%s/%sBusinessAction.java",
@@ -170,7 +153,9 @@ public class ClientGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/client/Delegator.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getDelegatorTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/client/nc/ui/{module}/{billCode}/{billCode}Delegator.java
         String outputPath = String.format("%s/src/client/nc/ui/%s/%s/%sDelegator.java",
@@ -190,7 +175,9 @@ public class ClientGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/client/EventHandler.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getEventHandlerTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/client/nc/ui/{module}/{billCode}/{billCode}EventHandler.java
         String outputPath = String.format("%s/src/client/nc/ui/%s/%s/%sEventHandler.java",
@@ -210,7 +197,9 @@ public class ClientGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/client/RefModel.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getRefModelTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/client/nc/ui/{module}/{billCode}/{billCode}RefModel.java
         String outputPath = String.format("%s/src/client/nc/ui/%s/%s/%sRefModel.java",

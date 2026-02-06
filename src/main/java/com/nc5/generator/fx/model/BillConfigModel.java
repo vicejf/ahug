@@ -187,6 +187,13 @@ public class BillConfigModel {
     public boolean isMultiBill() {
         return "multi".equals(billType.get());
     }
+
+    /**
+     * 判断是否档案类型
+     */
+    public boolean isArchiveBill() {
+        return "archive".equals(billType.get());
+    }
     
     // Property getters
     public StringProperty billCodeProperty() { return billCode; }

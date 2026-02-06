@@ -52,14 +52,8 @@ public class GenerateController {
         String outputDirValue = billConfigModel.getOutputDir();
         String sourcePathValue = billConfigModel.getSourcePath();
 
-        System.out.println("[GenerateController] 模型中的值 - OutputDir: " + outputDirValue);
-        System.out.println("[GenerateController] 模型中的值 - SourcePath: " + sourcePathValue);
-
         outputDirField.setText(outputDirValue);
         projectSrcField.setText(sourcePathValue);
-
-        System.out.println("[GenerateController] 设置字段后的值 - OutputDir: " + outputDirField.getText());
-        System.out.println("[GenerateController] 设置字段后的值 - SourcePath: " + projectSrcField.getText());
 
         // 生成选项复选框双向绑定
         generateClientCheck.selectedProperty().bindBidirectional(billConfigModel.generateClientProperty());
@@ -70,9 +64,6 @@ public class GenerateController {
         outputDirField.textProperty().bindBidirectional(billConfigModel.outputDirProperty());
         projectSrcField.textProperty().bindBidirectional(billConfigModel.sourcePathProperty());
         syncAfterGenerate.selectedProperty().bindBidirectional(billConfigModel.syncAfterGenerateProperty());
-
-        System.out.println("[GenerateController] 双向绑定完成 - OutputDir: " + outputDirField.getText());
-        System.out.println("[GenerateController] 双向绑定完成 - SourcePath: " + projectSrcField.getText());
 
         // 不再添加监听器，避免在初始化时触发保存
         // 全局配置将在应用退出时统一保存

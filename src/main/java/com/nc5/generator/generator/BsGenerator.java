@@ -3,6 +3,7 @@ package com.nc5.generator.generator;
 import com.nc5.generator.config.BillConfig;
 import com.nc5.generator.template.TemplateContext;
 import com.nc5.generator.template.TemplateEngine;
+import com.nc5.generator.template.TemplateSelector;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,9 @@ public class BsGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/bs/InsertAction.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getInsertActionTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/private/nc/bs/{module}/{billCode}/InsertAction.java
         String outputPath = String.format("%s/src/private/nc/bs/%s/%s/InsertAction.java",
@@ -79,7 +82,9 @@ public class BsGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/bs/UpdateAction.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getUpdateActionTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/private/nc/bs/{module}/{billCode}/UpdateAction.java
         String outputPath = String.format("%s/src/private/nc/bs/%s/%s/UpdateAction.java",
@@ -98,7 +103,9 @@ public class BsGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/bs/DeleteAction.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getDeleteActionTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/private/nc/bs/{module}/{billCode}/DeleteAction.java
         String outputPath = String.format("%s/src/private/nc/bs/%s/%s/DeleteAction.java",
@@ -117,7 +124,9 @@ public class BsGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/bs/SaveAction.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getSaveActionTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/public/nc/action/{module}/{billCode}/N_{billCode}_SAVE.java
         String outputPath = String.format("%s/src/public/nc/action/%s/%s/N_%s_SAVE.java",
@@ -137,15 +146,9 @@ public class BsGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        // 根据是否有表体选择不同的模板
-        String templateName;
-        if (billConfig.getBodyCodeList() != null && !billConfig.getBodyCodeList().isEmpty()) {
-            templateName = "templates/bs/QueryAction_Multi.vm";
-        } else {
-            templateName = "templates/bs/QueryAction_Single.vm";
-        }
-        
-        String content = templateEngine.render(templateName, context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getQueryActionTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/private/nc/bs/{module}/{billCode}/QueryAction.java
         String outputPath = String.format("%s/src/private/nc/bs/%s/%s/QueryAction.java",
@@ -192,10 +195,10 @@ public class BsGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
         
-        // 选择模板
-        String templateName = "templates/bs/" + templateFile;
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getPubActionTemplate(billConfig, templateFile);
         
-        String content = templateEngine.render(templateName, context);
+        String content = templateEngine.render(templatePath, context);
         
         // 输出路径: src/private/nc/bs/pub/action/N_{BILLCODE}_{ACTIONNAME}.java
         String outputPath = String.format("%s/src/private/nc/bs/pub/action/N_%s_%s.java",

@@ -3,6 +3,7 @@ package com.nc5.generator.generator.impl;
 import com.nc5.generator.config.BillConfig;
 import com.nc5.generator.generator.VelocityUtil;
 import com.nc5.generator.template.TemplateContext;
+import com.nc5.generator.template.TemplateSelector;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +23,7 @@ public class ImplGenerator {
         vc.put("BillVO", billConfig.getBillCode());
         vc.put("bodyCodeList", billConfig.getBodyCodeList());
         
-        Template template = VelocityUtil.getTemplate("templates/impl/ServerImpl.vm");
+        Template template = VelocityUtil.getTemplate(TemplateSelector.getImplTemplate(billConfig));
         
         String pkgPath = billConfig.getPackageName().replace('.', '/');
         String implPath = outputDir.getAbsolutePath() + "/src/private/" + pkgPath + "/impl/" + billConfig.getModule().toLowerCase() + "/" + billConfig.getBillCode() + "/";

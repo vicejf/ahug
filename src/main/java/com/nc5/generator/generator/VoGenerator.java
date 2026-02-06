@@ -3,6 +3,7 @@ package com.nc5.generator.generator;
 import com.nc5.generator.config.BillConfig;
 import com.nc5.generator.template.TemplateContext;
 import com.nc5.generator.template.TemplateEngine;
+import com.nc5.generator.template.TemplateSelector;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,9 @@ public class VoGenerator {
         // 生成HVO
         generateHVO(billConfig);
 
-        // 生成BVO（仅当不是单表头类型时）
-        if (!billConfig.isSingleBill()) {
-            if (billConfig.isMultiBill() && billConfig.getBodyCodeList().size() > 0) {
+        // 生成BVO（仅当多表体类型时）
+        if (billConfig.isMultiBill()) {
+            if (billConfig.getBodyCodeList().size() > 0) {
                 // 多表体：生成多个BVO
                 generateMultipleBVO(billConfig);
             } else {
@@ -59,7 +60,9 @@ public class VoGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/vo/HVO.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getHVOTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/public/nc/vo/{module}/{billCode}/{billCode}HVO.java
         String outputPath = String.format("%s/src/public/nc/vo/%s/%s/%sHVO.java",
@@ -79,7 +82,9 @@ public class VoGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/vo/BVO.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getBVOTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/public/nc/vo/{module}/{billCode}/{bodyCode}VO.java
         String outputPath = String.format("%s/src/public/nc/vo/%s/%s/%sVO.java",
@@ -101,7 +106,9 @@ public class VoGenerator {
             context.setBillConfig(billConfig);
             context.put("currentBodyCode", bodyCode);
 
-            String content = templateEngine.render("templates/vo/BVO.vm", context);
+            // 使用模板选择器获取模板路径
+            String templatePath = TemplateSelector.getBVOTemplate(billConfig);
+            String content = templateEngine.render(templatePath, context);
 
             // 输出路径: src/public/nc/vo/{module}/{billCode}/{bodyCode}VO.java
             String outputPath = String.format("%s/src/public/nc/vo/%s/%s/%sVO.java",
@@ -122,7 +129,9 @@ public class VoGenerator {
         TemplateContext context = new TemplateContext();
         context.setBillConfig(billConfig);
 
-        String content = templateEngine.render("templates/vo/AggVO.vm", context);
+        // 使用模板选择器获取模板路径
+        String templatePath = TemplateSelector.getAggVOTemplate(billConfig);
+        String content = templateEngine.render(templatePath, context);
 
         // 输出路径: src/public/nc/vo/{module}/{billCode}/Agg{billCode}VO.java
         String outputPath = String.format("%s/src/public/nc/vo/%s/%s/Agg%sVO.java",

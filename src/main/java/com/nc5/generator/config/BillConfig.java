@@ -59,7 +59,7 @@ public class BillConfig {
     private List<String> bodyCodeList = new ArrayList<>();
 
     /**
-     * 单据类型：single（单表头）或multi（多表体）
+     * 单据类型：single（单表头）、multi（多表体）或archive（档案类型）
      */
     private String billType = "single";
 
@@ -170,6 +170,13 @@ public class BillConfig {
      */
     public boolean isMultiBill() {
         return "multi".equals(billType);
+    }
+
+    /**
+     * 判断是否档案类型
+     */
+    public boolean isArchiveBill() {
+        return "archive".equals(billType);
     }
 
     public String getDescription() {

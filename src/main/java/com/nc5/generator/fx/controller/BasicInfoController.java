@@ -1,5 +1,6 @@
 package com.nc5.generator.fx.controller;
 
+import com.nc5.generator.config.BillType;
 import com.nc5.generator.fx.model.BillConfigModel;
 import com.nc5.generator.fx.util.NotificationUtil;
 import javafx.fxml.FXML;
@@ -24,9 +25,9 @@ public class BasicInfoController {
 
     @FXML
     public void initialize() {
-        // 初始化单据类型下拉框
-        billTypeCombo.getItems().addAll("single", "multi");
-        billTypeCombo.setValue("single");
+        // 初始化单据类型下拉框 - 使用全局映射表，便于维护
+        billTypeCombo.getItems().addAll(BillType.getAllEnabledCodes());
+        billTypeCombo.setValue(BillType.getDefault().getCode());
 
         // 作者字段不可编辑
         authorField.setEditable(false);
@@ -87,7 +88,8 @@ public class BasicInfoController {
 
         // 监听单据类型变化，控制表体编码字段的可用状态
         billTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if ("single".equals(newVal)) {
+            BillType currentType = BillType.fromCode(newVal);
+            if (currentType == BillType.SINGLE || currentType == BillType.ARCHIVE) {
                 bodyCodeField.setDisable(true);
                 bodyCodeField.clear();
                 clearFieldError(bodyCodeField);
@@ -99,7 +101,8 @@ public class BasicInfoController {
         });
 
         // 初始化表体编码字段状态
-        if ("single".equals(billTypeCombo.getValue())) {
+        BillType initialType = BillType.fromCode(billTypeCombo.getValue());
+        if (initialType == BillType.SINGLE || initialType == BillType.ARCHIVE) {
             bodyCodeField.setDisable(true);
         } else {
             setDefaultBodyCode();
@@ -110,7 +113,7 @@ public class BasicInfoController {
             if (newVal != null && !newVal.isEmpty()) {
                 headCodeField.setText(newVal + "HVO");
                 // 只在多表体类型时自动推断表体编码
-                if (!"single".equals(billTypeCombo.getValue())) {
+                if (BillType.fromCode(billTypeCombo.getValue()) == BillType.MULTI) {
                     setDefaultBodyCode();
                 }
             } else {
@@ -146,7 +149,7 @@ public class BasicInfoController {
 
         // 表体编码（仅对多表体类型验证）
         bodyCodeField.textProperty().addListener((obs, old, newVal) -> {
-            if (!"single".equals(billTypeCombo.getValue())) {
+            if (BillType.fromCode(billTypeCombo.getValue()) == BillType.MULTI) {
                 if (isNullOrEmpty(newVal)) {
                     applyFieldError(bodyCodeField);
                 } else {
@@ -192,7 +195,7 @@ public class BasicInfoController {
         }
 
         // 仅对多表体类型验证表体编码
-        if (!"single".equals(billTypeCombo.getValue())) {
+        if (BillType.fromCode(billTypeCombo.getValue()) == BillType.MULTI) {
             if (isNullOrEmpty(bodyCodeField.getText())) {
                 errors.append("- 表体编码不能为空（多表体类型）\n");
                 applyFieldError(bodyCodeField);
@@ -215,7 +218,7 @@ public class BasicInfoController {
      * 设置默认表体编码
      */
     private void setDefaultBodyCode() {
-        if (!"single".equals(billTypeCombo.getValue())) {
+        if (BillType.fromCode(billTypeCombo.getValue()) == BillType.MULTI) {
             String billCode = billCodeField.getText();
             if (billCode != null && !billCode.isEmpty()) {
                 String defaultBodyCode = billCode + "BVO";

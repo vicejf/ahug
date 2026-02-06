@@ -1,0 +1,84 @@
+{
+  "description": "模板路径映射配置文件",
+  "version": "1.0",
+  "billTypes": {
+    "single": {
+      "name": "单表头类型",
+      "templates": {
+        "client": {
+          "controller": "client/by-type/single/Controller_Single.vm",
+          "clientUI": "client/by-type/single/ClientUI_Single.vm"
+        },
+        "bs": {
+          "queryAction": "bs/by-type/single/QueryAction_Single.vm"
+        },
+        "metadata": {
+          "configFile": "METADATA/by-type/single/"
+        }
+      }
+    },
+    "multi": {
+      "name": "多表体类型",
+      "templates": {
+        "client": {
+          "controller": "client/by-type/multi/Controller_Multi.vm",
+          "clientUI": "client/by-type/multi/ClientUI_Multi.vm"
+        },
+        "bs": {
+          "queryAction": "bs/by-type/multi/QueryAction_Multi.vm"
+        },
+        "metadata": {
+          "configFile": "METADATA/by-type/multi/"
+        }
+      }
+    },
+    "archive": {
+      "name": "档案类型",
+      "templates": {
+        "client": {
+          "controller": "client/by-type/archive/Controller_Archive.vm",
+          "clientUI": "client/by-type/archive/ClientUI_Archive.vm"
+        },
+        "bs": {
+          "queryAction": "bs/by-type/archive/QueryAction_Archive.vm"
+        },
+        "metadata": {
+          "configFile": "METADATA/by-type/archive/"
+        }
+      }
+    }
+  },
+  "common": {
+    "name": "通用模板",
+    "templates": {
+      "client": {
+        "businessAction": "client/common/BusinessAction.vm",
+        "delegator": "client/common/Delegator.vm",
+        "eventHandler": "client/common/EventHandler.vm",
+        "privateBtn": "client/common/IPrivateBtn.vm",
+        "refModel": "client/common/RefModel.vm"
+      },
+      "bs": {
+        "deleteAction": "bs/common/DeleteAction.vm",
+        "insertAction": "bs/common/InsertAction.vm",
+        "saveAction": "bs/common/SaveAction.vm",
+        "updateAction": "bs/common/UpdateAction.vm",
+        "pubAction_Approve": "bs/common/PubAction_Approve.vm",
+        "pubAction_DELETE": "bs/common/PubAction_DELETE.vm",
+        "pubAction_EDIT": "bs/common/PubAction_EDIT.vm",
+        "pubAction_FREEZE": "bs/common/PubAction_FREEZE.vm",
+        "pubAction_SAVE": "bs/common/PubAction_SAVE.vm",
+        "pubAction_Simple": "bs/common/PubAction_Simple.vm",
+        "pubAction_UNAPPROVE": "bs/common/PubAction_UNAPPROVE.vm",
+        "pubAction_UNFREEZE": "bs/common/PubAction_UNFREEZE.vm",
+        "pubAction_WRITE": "bs/common/PubAction_WRITE.vm",
+        "pubAction_WRITEBATCH": "bs/common/PubAction_WRITEBATCH.vm"
+      },
+      "vo": {
+        "hvo": "vo/common/HVO.vm",
+        "bvo": "vo/common/BVO.vm",
+        "aggVO": "vo/common/AggVO.vm"
+      }
+    }
+  }
+}

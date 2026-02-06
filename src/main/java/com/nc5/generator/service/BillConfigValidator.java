@@ -35,7 +35,7 @@ public class BillConfigValidator {
         //     return false;
         // }
         // 仅对多表体类型验证表体编码
-        if (!"single".equals(billConfigModel.getBillType())) {
+        if ("multi".equals(billConfigModel.getBillType())) {
             if (isNullOrEmpty(billConfigModel.getBodyCode())) {
                 return false;
             }

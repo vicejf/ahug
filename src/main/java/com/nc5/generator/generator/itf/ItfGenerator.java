@@ -2,6 +2,7 @@ package com.nc5.generator.generator.itf;
 
 import com.nc5.generator.config.BillConfig;
 import com.nc5.generator.generator.VelocityUtil;
+import com.nc5.generator.template.TemplateSelector;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +31,7 @@ public class ItfGenerator {
         vc.put("author", author);
         vc.put("date", dateStr);
 
-        Template template = VelocityUtil.getTemplate("templates/itf/IServer.vm");
+        Template template = VelocityUtil.getTemplate(TemplateSelector.getItfTemplate(billConfig));
 
         // NC5 的 public 接口路径对应 src/public/...
         String pkgPath = billConfig.getPackageName().replace('.', '/');

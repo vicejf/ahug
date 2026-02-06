@@ -1,0 +1,125 @@
+package nc.ui.${bill.packageName}.${bill.classNameLower};
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.uap.IUAPQueryBS;
+import nc.jdbc.framework.processor.BeanListProcessor;
+import nc.ui.pub.bill.BillItem;
+import nc.ui.trade.bill.AbstractManageController;
+import nc.ui.trade.bsdelegate.BusinessDelegator;
+import nc.ui.trade.manage.BillManageUI;
+import nc.ui.trade.manage.ManageEventHandler;
+import nc.vo.${bill.packageName}.${bill.classNameLower}.${bill.className}VO;
+import nc.vo.pub.BusinessException;
+import nc.vo.pub.CircularlyAccessibleValueObject;
+import nc.vo.trade.field.IBillField;
+
+/**
+ * $bill.billName - 档案界面
+ * @author $bill.author
+ * @since $year
+ */
+@SuppressWarnings("serial")
+public class ${bill.className}ClientUI extends BillManageUI {
+
+	
+	public ${bill.className}ClientUI() {
+		super();
+	}
+	
+	public ${bill.className}ClientUI(String pk_corp, String pk_billType, String pk_busitype,
+			String operater, String billId) {
+		super(pk_corp, pk_billType, pk_busitype, operater, billId);
+	}
+	
+
+	@Override
+	protected AbstractManageController createController() {
+		return new ${bill.className}Controller();
+	}
+	
+	@Override
+	protected BusinessDelegator createBusinessDelegator() {
+		return new ${bill.className}Delegator();
+	}
+	
+	@Override
+	protected ManageEventHandler createEventHandler() {
+		return new ${bill.className}EventHandler(this, getUIControl());
+	}
+
+	@Override
+	public void setBodySpecialData(CircularlyAccessibleValueObject[] vos) throws Exception {
+		
+	}
+
+	@Override
+	protected void setHeadSpecialData(CircularlyAccessibleValueObject vo, int intRow) throws Exception {
+		
+	}
+
+	@Override
+	protected void setTotalHeadSpecialData(CircularlyAccessibleValueObject[] vos) throws Exception {
+		
+	}
+
+	@Override
+	protected void initSelfData() {
+		
+	}
+
+	@Override
+	public void setDefaultData() throws Exception {
+		
+		IBillField billfield=getBillField();
+		String[] itemkeys=new String[]{
+				billfield.getField_Corp(),
+				${bill.className}VO.CREATEOR,
+				${bill.className}VO.CREATEDATE,
+				${bill.className}VO.VCODE
+		};
+		
+		Object[] values=new Object[]{
+				_getCorp().getPrimaryKey(),
+				_getOperator(),
+				_getServerTime(),
+				String.valueOf(getNewCode())
+		};
+		for(int i=0;i<itemkeys.length;i++){
+			BillItem item=null;
+			item=getBillCardPanel().getHeadItem(itemkeys[i]);
+			if(item==null){
+				item=getBillCardPanel().getTailItem(itemkeys[i]);
+			}
+			if(item!=null){
+				item.setValue(values[i]);
+			}
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public int getNewCode()throws BusinessException{
+		int count=1;
+		String whereSql=" select * from ${bill.tableName}_h where pk_corp='"+_getCorp().getPrimaryKey()+"'";
+		List<Object> result=(ArrayList<Object>) queryUAPServer().executeQuery(whereSql, new BeanListProcessor(${bill.className}VO.class));
+		if(result!=null&&result.size()>0){
+			count=result.size()+1;
+		}
+		return count;
+	}
+	
+	
+	private IUAPQueryBS uapserver;
+
+	private IUAPQueryBS queryUAPServer(){
+		if(uapserver==null){
+			uapserver=NCLocator.getInstance().lookup(IUAPQueryBS.class);
+		}
+		return uapserver;
+	}
+	
+}

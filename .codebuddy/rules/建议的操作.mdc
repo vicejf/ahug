@@ -1,0 +1,9 @@
+---
+description: 当需要执行命令行时建议的方式
+alwaysApply: false
+enabled: true
+updatedAt: 2026-02-06T03:07:12.523Z
+provider: 
+---
+
+【推荐】使用MCP工具来执行PowerShell、cmd、bash命令
