@@ -36,7 +36,7 @@
             <ToolBar>
                 <Button text="新建" onAction="#handleNewConfig" styleClass="tool-button" />
                 <Button text="打开" onAction="#handleOpenConfig" styleClass="tool-button" />
-                <Button text="保存" onAction="#handleSaveConfig" styleClass="tool-button" />
+                <Button text="保存单据配置" onAction="#handleSaveConfig" styleClass="tool-button" />
                 <Separator orientation="VERTICAL" />
                 <Button text="生成代码" onAction="#handleGenerate"
                     styleClass="tool-button,primary-button" />

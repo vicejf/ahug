@@ -230,10 +230,14 @@ public class MainController {
         GlobalConfig globalConfig = CodeGeneratorApp.getGlobalConfig();
         if (globalConfig != null) {
             // 将全局配置的值设置到GlobalConfigModel中
-            logger.info("加载全局配置到模型 - Author: {}, OutputDir: {}",
-                globalConfig.getAuthor(), globalConfig.getOutputDir());
+            logger.info("加载全局配置到模型 - Author: {}, OutputDir: {}, SourcePath: {}",
+                globalConfig.getAuthor(), globalConfig.getOutputDir(), globalConfig.getSourcePath());
 
             billConfigModel.getGlobalConfigModel().fromGlobalConfig(globalConfig);
+
+            // 验证是否设置成功
+            logger.info("验证模型中的值 - OutputDir: {}, SourcePath: {}",
+                billConfigModel.getOutputDir(), billConfigModel.getSourcePath());
 
             logger.debug("已加载全局配置到模型");
         } else {
@@ -277,6 +281,9 @@ public class MainController {
             @Override
             public void onSuccess(File loadedFile) {
                 Platform.runLater(() -> {
+                    // 加载单据配置后，重新加载全局配置以确保全局配置不被覆盖
+                    loadGlobalConfigToModel();
+
                     if (codePreviewTabController != null) {
                         codePreviewTabController.updateUIFromModel();
                     }

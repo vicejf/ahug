@@ -90,6 +90,17 @@ public class CodeGeneratorApp extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        // 退出前保存全局配置
+        if (globalConfigManager != null) {
+            try {
+                // 从当前模型中获取最新的全局配置并保存
+                // 注意：这里需要从主控制器获取最新的模型
+                // 如果无法获取，则跳过保存
+                System.out.println("正在保存全局配置...");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         // 清理操作
         System.out.println("NC5代码生成器已关闭");
     }

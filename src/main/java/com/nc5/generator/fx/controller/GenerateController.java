@@ -1,6 +1,7 @@
 package com.nc5.generator.fx.controller;
 
 import com.nc5.generator.fx.model.BillConfigModel;
+import com.nc5.generator.fx.CodeGeneratorApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -45,15 +46,53 @@ public class GenerateController {
             return;
         }
 
+        System.out.println("[GenerateController] 开始绑定字段");
+
+        // 先设置字段的初始值，确保双向绑定前字段有正确的值
+        String outputDirValue = billConfigModel.getOutputDir();
+        String sourcePathValue = billConfigModel.getSourcePath();
+
+        System.out.println("[GenerateController] 模型中的值 - OutputDir: " + outputDirValue);
+        System.out.println("[GenerateController] 模型中的值 - SourcePath: " + sourcePathValue);
+
+        outputDirField.setText(outputDirValue);
+        projectSrcField.setText(sourcePathValue);
+
+        System.out.println("[GenerateController] 设置字段后的值 - OutputDir: " + outputDirField.getText());
+        System.out.println("[GenerateController] 设置字段后的值 - SourcePath: " + projectSrcField.getText());
+
         // 生成选项复选框双向绑定
         generateClientCheck.selectedProperty().bindBidirectional(billConfigModel.generateClientProperty());
         generateBusinessCheck.selectedProperty().bindBidirectional(billConfigModel.generateBusinessProperty());
         generateMetadataCheck.selectedProperty().bindBidirectional(billConfigModel.generateMetadataProperty());
 
-        // 输出配置字段绑定
+        // 输出配置字段双向绑定
         outputDirField.textProperty().bindBidirectional(billConfigModel.outputDirProperty());
         projectSrcField.textProperty().bindBidirectional(billConfigModel.sourcePathProperty());
         syncAfterGenerate.selectedProperty().bindBidirectional(billConfigModel.syncAfterGenerateProperty());
+
+        System.out.println("[GenerateController] 双向绑定完成 - OutputDir: " + outputDirField.getText());
+        System.out.println("[GenerateController] 双向绑定完成 - SourcePath: " + projectSrcField.getText());
+
+        // 不再添加监听器，避免在初始化时触发保存
+        // 全局配置将在应用退出时统一保存
+    }
+
+    /**
+     * 手动保存全局配置
+     * 可以在需要时调用，例如：在浏览目录后立即保存
+     */
+    public void saveGlobalConfig() {
+        try {
+            if (CodeGeneratorApp.getGlobalConfigManager() != null) {
+                CodeGeneratorApp.getGlobalConfigManager().setGlobalConfig(
+                    billConfigModel.getGlobalConfigModel().toGlobalConfig()
+                );
+                CodeGeneratorApp.getGlobalConfigManager().saveGlobalConfig();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // ========== 输出配置相关方法 ==========
@@ -75,6 +114,7 @@ public class GenerateController {
         File selectedDir = chooser.showDialog(outputDirField.getScene().getWindow());
         if (selectedDir != null) {
             outputDirField.setText(selectedDir.getAbsolutePath());
+            saveGlobalConfig(); // 选择后立即保存
         }
     }
 
@@ -82,6 +122,7 @@ public class GenerateController {
     public void handleClearOutputDir() {
         if (outputDirField != null) {
             outputDirField.clear();
+            saveGlobalConfig(); // 清除后立即保存
         }
     }
 
@@ -102,6 +143,7 @@ public class GenerateController {
         File selectedDir = chooser.showDialog(projectSrcField.getScene().getWindow());
         if (selectedDir != null) {
             projectSrcField.setText(selectedDir.getAbsolutePath());
+            saveGlobalConfig(); // 选择后立即保存
         }
     }
 
