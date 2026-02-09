@@ -259,6 +259,7 @@ public class XmlConfigWriter {
         addElement(basicInfoElement, "module", config.getModule());
         addElement(basicInfoElement, "packageName", config.getPackageName());
         addElement(basicInfoElement, "bodyCode", config.getBodyCode());
+        addElement(basicInfoElement, "headCode", config.getHeadCode());  // 新增
         addElement(basicInfoElement, "billType", config.getBillType());
         addElement(basicInfoElement, "description", config.getDescription());
 

@@ -15,7 +15,7 @@ import nc.vo.pub.lang.UFDateTime;
  * @author ${author}
  * @since ${date}
  */
-public class ${BillVO}${ruleType}Rule {
+public class ${BillVO}${ruleType} {
 
     /**
      * Rule执行入口

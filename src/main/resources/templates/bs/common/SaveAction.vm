@@ -3,7 +3,7 @@ package nc.bs.${bill.packageName}.${bill.classNameLower};
 import java.util.ArrayList;
 import java.util.List;
 
-import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.className}SaveAfterRule;
+import nc.rule.${bill.packageName}.${bill.classNameLower}.${bill.headCode}SaveAfterRule;
 import nc.vo.${bill.packageName}.${bill.classNameLower}.Agg${bill.className}VO;
 import nc.vo.dygpubapp.appframe.entity.util.VOTool;
 
@@ -33,7 +33,7 @@ public class SaveAction {
 		Agg${bill.className}VO[] retvos = lstvos.toArray(new Agg${bill.className}VO[0]);
 		
 		//保存后规则
-		${bill.className}SaveAfterRule rule =new ${bill.className}SaveAfterRule();
+		${bill.headCode}SaveAfterRule rule =new ${bill.headCode}SaveAfterRule();
 		rule.process(retvos);
 
 		return retvos;

@@ -53,7 +53,7 @@
                 <TextField fx:id="bodyCodeField" GridPane.rowIndex="1" GridPane.columnIndex="3"
                            promptText="如：AU84BVO"/>
 
-                <!-- 第三行：单据名称 + 作者 -->
+                <!-- 第三行：单据名称 + 包名 -->
                 <HBox GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_LEFT" spacing="2">
                     <Label text="单据名称" styleClass="field-label"/>
                     <Label text="*" style="-fx-text-fill: #ff4d4f; -fx-font-weight: bold; -fx-font-size: 14px;"/>
@@ -61,8 +61,13 @@
                 <TextField fx:id="billNameField" GridPane.rowIndex="2" GridPane.columnIndex="1"
                            promptText="如：生产入库单" styleClass="required-field"/>
 
-                <Label text="作者:" GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="field-label"/>
-                <TextField fx:id="authorField" GridPane.rowIndex="2" GridPane.columnIndex="3"
+                <Label text="包名:" GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="field-label"/>
+                <TextField fx:id="packageNameField" GridPane.rowIndex="2" GridPane.columnIndex="3"
+                           text="ahu" promptText="模块包名，默认为ahu"/>
+
+                <!-- 第四行：作者 -->
+                <Label text="作者:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+                <TextField fx:id="authorField" GridPane.rowIndex="3" GridPane.columnIndex="1"
                            text="Flynn Chen" editable="false" disable="true" promptText="代码作者"/>
             </GridPane>
         </TitledPane>

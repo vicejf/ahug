@@ -284,6 +284,7 @@ public class XmlConfigParser {
             billConfig.setModule(basicInfoElement.elementText("module"));
             billConfig.setPackageName(basicInfoElement.elementText("packageName"));
             billConfig.setBodyCode(basicInfoElement.elementText("bodyCode"));
+            billConfig.setHeadCode(basicInfoElement.elementText("headCode"));  // 新增
             billConfig.setDescription(basicInfoElement.elementText("description"));
 
             String billType = basicInfoElement.elementText("billType");
@@ -297,6 +298,7 @@ public class XmlConfigParser {
             billConfig.setModule(root.elementText("module"));
             billConfig.setPackageName(root.elementText("packageName"));
             billConfig.setBodyCode(root.elementText("bodyCode"));
+            billConfig.setHeadCode(root.elementText("headCode"));  // 新增
             billConfig.setDescription(root.elementText("description"));
 
             String billType = root.elementText("billType");

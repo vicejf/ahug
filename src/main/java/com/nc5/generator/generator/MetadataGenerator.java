@@ -32,6 +32,15 @@ public class MetadataGenerator {
      * 生成元数据文件
      */
     public void generate(BillConfig billConfig) throws Exception {
+        logger.info("=== 元数据生成开始 ===");
+        logger.info("单据编码: {}", billConfig.getBillCode());
+        logger.info("单据名称: {}", billConfig.getBillName());
+        logger.info("GlobalConfig是否存在: {}", billConfig.getGlobalConfig() != null);
+        if (billConfig.getGlobalConfig() != null) {
+            logger.info("GlobalConfig.GenerateMetadata: {}", billConfig.getGlobalConfig().isGenerateMetadata());
+        }
+        logger.info("BillConfig.isGenerateMetadata(): {}", billConfig.isGenerateMetadata());
+        
         // 获取元数据模板
         String metadataTemplatePath = TemplateSelector.getMetadataTemplate(billConfig);
         if (metadataTemplatePath == null) {

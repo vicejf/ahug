@@ -9,6 +9,12 @@ import java.util.List;
 public class BillConfig {
 
     /**
+     * 表头编码（如AUJZH, AU05）
+     * 如果未设置，则默认为 billCode + "H"（如果billCode不以H结尾）
+     */
+    private String headCode;
+    
+    /**
      * 单据编码（如AU84、AUJZ）
      */
     private String billCode;
@@ -72,6 +78,26 @@ public class BillConfig {
      * 全局配置
      */
     private GlobalConfig globalConfig;
+
+    public String getHeadCode() {
+        // 如果未设置headCode，则根据billCode自动推断
+        if (headCode == null || headCode.isEmpty()) {
+            if (billCode != null && !billCode.isEmpty()) {
+                // 如果billCode已经以H结尾，则直接使用
+                if (billCode.endsWith("H")) {
+                    return billCode + "VO";
+                } else {
+                    // 否则添加H
+                    return billCode + "HVO";
+                }
+            }
+        }
+        return headCode;
+    }
+
+    public void setHeadCode(String headCode) {
+        this.headCode = headCode;
+    }
 
     public String getBillCode() {
         return billCode;

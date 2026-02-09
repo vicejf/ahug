@@ -21,6 +21,7 @@ public class BasicInfoController {
     @FXML private TextField headCodeField;
     @FXML private ComboBox<String> billTypeCombo;
     @FXML private TextField authorField;
+    @FXML private TextField packageNameField;
 
     private BillConfigModel billConfigModel;
 
@@ -83,6 +84,7 @@ public class BasicInfoController {
         billNameField.textProperty().bindBidirectional(billConfigModel.billNameProperty());
         bodyCodeField.textProperty().bindBidirectional(billConfigModel.bodyCodeProperty());
         headCodeField.textProperty().bindBidirectional(billConfigModel.headCodeProperty());
+        packageNameField.textProperty().bindBidirectional(billConfigModel.packageNameProperty());
         // 作者字段绑定到全局配置（而非单据配置）
         authorField.textProperty().bind(configManager.authorProperty());
         authorField.setEditable(false);

@@ -109,6 +109,16 @@ public class CodeGenerateService {
                     // 必须在创建 CodeGenerator 之前调用，以便使用正确的输出目录
                     applyGlobalConfigForGeneration(config);
 
+                    // 添加调试日志
+                    log("生成配置检查:");
+                    log("  - GenerateClient: " + config.isGenerateClient());
+                    log("  - GenerateBusiness: " + config.isGenerateBusiness());
+                    log("  - GenerateMetadata: " + config.isGenerateMetadata());
+                    log("  - GlobalConfig exists: " + (config.getGlobalConfig() != null));
+                    if (config.getGlobalConfig() != null) {
+                        log("  - GlobalConfig.GenerateMetadata: " + config.getGlobalConfig().isGenerateMetadata());
+                    }
+
                     // 从全局配置获取输出目录
                     File actualOutputDir = outputDir;
                     if (config.getGlobalConfig() != null && config.getGlobalConfig().getOutputDir() != null 
@@ -271,6 +281,7 @@ public class CodeGenerateService {
         GlobalConfig billGlobal = billConfig.getGlobalConfig();
         if (billGlobal == null) {
             billGlobal = new GlobalConfig();
+            billConfig.setGlobalConfig(billGlobal);
         }
     
         billGlobal.setOutputDir(appGlobal.getOutputDir());
@@ -281,6 +292,7 @@ public class CodeGenerateService {
         billGlobal.setGenerateBusiness(appGlobal.isGenerateBusiness());
         billGlobal.setGenerateMetadata(appGlobal.isGenerateMetadata());
     
+        // 确保 GlobalConfig 已经设置到 billConfig 中
         billConfig.setGlobalConfig(billGlobal);
     }
 

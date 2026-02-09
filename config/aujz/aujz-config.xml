@@ -6,8 +6,9 @@
         <billCode>AUJZ</billCode>
         <billName>物料开封</billName>
         <module></module>
-        <packageName></packageName>
+        <packageName>ahu</packageName>
         <bodyCode></bodyCode>
+        <headCode>AUJZHVO</headCode>
         <billType>single</billType>
         <description></description>
     </basicInfo>
