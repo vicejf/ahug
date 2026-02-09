@@ -1,0 +1,68 @@
+[
+  {
+    "name": "pk_org",
+    "label": "组织",
+    "type": "String",
+    "dbType": "VARCHAR2(20)",
+    "length": 20,
+    "uiType": "Text",
+    "required": true,
+    "primaryKey": true,
+    "editable": false
+  },
+  {
+    "name": "rowno",
+    "label": "行号",
+    "type": "Integer",
+    "dbType": "NUMBER(10)",
+    "length": 10,
+    "uiType": "Text",
+    "required": true,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "material",
+    "label": "物料",
+    "type": "String",
+    "dbType": "VARCHAR2(50)",
+    "length": 50,
+    "uiType": "Text",
+    "required": true,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "quantity",
+    "label": "数量",
+    "type": "BigDecimal",
+    "dbType": "NUMBER(15,2)",
+    "length": 15,
+    "uiType": "Text",
+    "required": true,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "price",
+    "label": "单价",
+    "type": "BigDecimal",
+    "dbType": "NUMBER(15,2)",
+    "length": 15,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "amount",
+    "label": "金额",
+    "type": "BigDecimal",
+    "dbType": "NUMBER(15,2)",
+    "length": 15,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  }
+]

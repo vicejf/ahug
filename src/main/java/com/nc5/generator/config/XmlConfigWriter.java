@@ -162,19 +162,15 @@ public class XmlConfigWriter {
 
     /**
      * 将全局配置信息写入 BillConfig XML（使用分组结构）
-     * 注意：projectConfig（sourcePath、outputDir、author）已移至全局 INI 配置，不包含在单据配置中
+     * 注意：生成选项（generateOptions）已移至全局 INI 配置，不包含在单据配置中
+     * 只写入元数据相关配置
      */
     private void writeGlobalInfoToBill(Element root, GlobalConfig config) {
         // 使用 globalConfig 子节点组织全局配置
         Element globalConfigElement = root.addElement("globalConfig");
 
-        // 生成选项
-        Element generateOptionsElement = globalConfigElement.addElement("generateOptions");
-        addComment(generateOptionsElement, "代码生成选项");
-        addElement(generateOptionsElement, "generateClient", String.valueOf(config.isGenerateClient()));
-        addElement(generateOptionsElement, "generateBusiness", String.valueOf(config.isGenerateBusiness()));
-        addElement(generateOptionsElement, "generateMetadata", String.valueOf(config.isGenerateMetadata()));
-        addElement(generateOptionsElement, "syncAfterGenerate", String.valueOf(config.isSyncAfterGenerate()));
+        // 注意：生成选项不再写入单据配置，由全局配置统一管理
+        // 保留元数据相关配置的写入
 
         // 元数据生成开关
         Element metadataSwitchesElement = globalConfigElement.addElement("metadataSwitches");

@@ -249,8 +249,8 @@ public class FieldService {
         FieldConfigModel field = new FieldConfigModel();
         field.setName(name);
         field.setLabel("主键");
-        field.setType("String");
-        field.setDbType("VARCHAR2(20)");
+        field.setType("UFID");
+        field.setDbType("CHAR(20)");
         field.setLength(20);
         field.setUiType("Text");
         field.setRequired(true);
@@ -418,6 +418,69 @@ public class FieldService {
         } catch (Exception e) {
             return absolutePath;
         }
+    }
+
+    // ==================== 模板保存功能 ====================
+
+    /**
+     * 保存字段为模板文件
+     */
+    public boolean saveFieldsAsTemplate(ObservableList<FieldConfigModel> fields, File templateFile) {
+        try {
+            // 确保父目录存在
+            File parentDir = templateFile.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            // 转换为模板格式（只保存字段基本信息）
+            List<FieldTemplate> templates = new ArrayList<>();
+            for (FieldConfigModel model : fields) {
+                FieldTemplate template = new FieldTemplate();
+                template.name = model.getName();
+                template.label = model.getLabel();
+                template.type = model.getType();
+                template.dbType = model.getDbType();
+                template.length = model.getLength();
+                template.uiType = model.getUiType();
+                template.required = model.isRequired();
+                template.primaryKey = model.isPrimaryKey();
+                template.editable = model.isEditable();
+                templates.add(template);
+            }
+
+            String json = gson.toJson(templates);
+            try (FileWriter writer = new FileWriter(templateFile, StandardCharsets.UTF_8)) {
+                writer.write(json);
+            }
+
+            logger.info("字段模板已保存至: {}", templateFile.getAbsolutePath());
+            return true;
+        } catch (Exception e) {
+            logger.error("保存字段模板失败: {}", templateFile.getAbsolutePath(), e);
+            return false;
+        }
+    }
+
+    /**
+     * 获取模板目录
+     */
+    public File getTemplateDirectory() {
+        File templateDir = new File(System.getProperty("user.dir"), "src/main/resources/templates");
+        if (!templateDir.exists()) {
+            templateDir.mkdirs();
+        }
+        return templateDir;
+    }
+
+    /**
+     * 获取默认模板文件名
+     */
+    public String getDefaultTemplateName(String billCode, String fieldCode) {
+        if (billCode != null && !billCode.isEmpty()) {
+            return billCode + "-" + (fieldCode != null ? fieldCode : "template") + ".json";
+        }
+        return "custom-template.json";
     }
 
     // ==================== 数据类 ====================

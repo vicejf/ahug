@@ -10,7 +10,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 /**
  * 表头字段标签页控制器
  */
-public class HeadFieldsController extends BaseFieldsController {
+public class HeadFieldsController extends FieldsController {
 
     @FXML private TableColumn<FieldConfigModel, Boolean> primaryKeyColumn;
     @FXML private TableColumn<FieldConfigModel, String> uiTypeColumn;

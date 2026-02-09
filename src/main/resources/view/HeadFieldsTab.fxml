@@ -23,6 +23,8 @@
         <Button text="清空" onAction="#handleSelectAll" styleClass="tool-button"/>
         <Button text="基本字段" onAction="#handleImportBasicFields" styleClass="tool-button"/>
         <Button text="导入模板" onAction="#handleImportTemplate" styleClass="tool-button"/>
+        <Separator orientation="VERTICAL"/>
+        <Button text="保存模板" onAction="#handleSaveTemplate" styleClass="tool-button"/>
     </ToolBar>
     
     <!-- 字段表格 -->

@@ -12,6 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
+import javafx.stage.FileChooser;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.io.File;
@@ -22,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
  * 字段表格控制器基类
  * 封装表头和表体字段表格的公共逻辑
  */
-public abstract class BaseFieldsController {
+public abstract class FieldsController {
 
     // 通用表格组件
     @FXML protected TableView<FieldConfigModel> fieldsTable;
@@ -46,7 +49,7 @@ public abstract class BaseFieldsController {
     protected final FieldService fieldService = new FieldService();
 
     // 下拉框选项
-    protected static final String[] FIELD_TYPES = {"String", "Integer", "Double", "Date", "Boolean", "BigDecimal"};
+    protected static final String[] FIELD_TYPES = {"","UFID", "String", "Integer", "UFDouble", "UFDate","UFDateTime", "UFBoolean","CUSTOM"};
 
     // 动态更新的类型选项列表（用于枚举配置监听）
     protected javafx.collections.ObservableList<String> dynamicFieldTypes =
@@ -113,13 +116,6 @@ public abstract class BaseFieldsController {
     }
 
     /**
-     * 是否启用复制表头功能（子类可重写）
-     */
-    protected boolean isCopyFromHeadEnabled() {
-        return false;
-    }
-
-    /**
      * 是否启用导入模板功能（子类可重写）
      */
     protected boolean isImportTemplateEnabled() {
@@ -130,6 +126,12 @@ public abstract class BaseFieldsController {
      * 获取导入模板的资源路径（子类可重写）
      */
     protected String getTemplateResourcePath() {
+        String fieldCode = getFieldCode();
+        if ("head".equals(fieldCode)) {
+            return "templates/field-template-head.json";
+        } else if ("body".equals(fieldCode)) {
+            return "templates/field-template-body.json";
+        }
         return "templates/field-template.json";
     }
 
@@ -199,6 +201,7 @@ public abstract class BaseFieldsController {
         // 字段类型
         typeColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("type"));
         typeColumn.setCellFactory(ComboBoxTableCell.forTableColumn(typeOptions));
+        typeColumn.setOnEditCommit(event -> event.getRowValue().setType(event.getNewValue()));
 
         // 数据库类型
         dbTypeColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("dbType"));
@@ -211,7 +214,10 @@ public abstract class BaseFieldsController {
         lengthColumn.setOnEditCommit(event -> {
             Integer newValue = event.getNewValue();
             if (newValue != null && newValue >= 0) {
-                event.getRowValue().setLength(newValue);
+                FieldConfigModel field = event.getRowValue();
+                field.setLength(newValue);
+                // 自动更新数据库类型中的长度信息
+                updateDbTypeWithLength(field, newValue);
             }
         });
 
@@ -251,6 +257,35 @@ public abstract class BaseFieldsController {
         );
     }
 
+    /**
+     * 根据长度自动更新数据库类型
+     */
+    protected void updateDbTypeWithLength(FieldConfigModel field, Integer newLength) {
+        String currentDbType = field.getDbType();
+        if (currentDbType == null || newLength == null) return;
+        
+        // 处理常见的数据库类型格式
+        String upperDbType = currentDbType.toUpperCase();
+        
+        // VARCHAR2(n) -> VARCHAR2(newLength)
+        if (upperDbType.startsWith("VARCHAR2(")) {
+            field.setDbType("VARCHAR2(" + newLength + ")");
+        }
+        // VARCHAR(n) -> VARCHAR(newLength)
+        else if (upperDbType.startsWith("VARCHAR(")) {
+            field.setDbType("VARCHAR(" + newLength + ")");
+        }
+        // CHAR(n) -> CHAR(newLength)
+        else if (upperDbType.startsWith("CHAR(")) {
+            field.setDbType("CHAR(" + newLength + ")");
+        }
+        // NVARCHAR2(n) -> NVARCHAR2(newLength)
+        else if (upperDbType.startsWith("NVARCHAR2(")) {
+            field.setDbType("NVARCHAR2(" + newLength + ")");
+        }
+        // 其他类型保持不变
+    }
+    
     /**
      * 设置字段名列的编辑提交处理
      */
@@ -466,7 +501,7 @@ public abstract class BaseFieldsController {
             fieldsTable.edit(-1, null);
         }
 
-        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存字段配置");
         fileChooser.getExtensionFilters().add(
             new javafx.stage.FileChooser.ExtensionFilter("JSON 文件", "*.json")
@@ -497,32 +532,6 @@ public abstract class BaseFieldsController {
      */
     protected String getFieldCode() {
         return "fields";
-    }
-
-    // ==================== 复制表头功能 ====================
-
-    @FXML
-    protected void handleCopyFromHead() {
-        if (!isCopyFromHeadEnabled()) return;
-
-        if (billConfigModel.getHeadFields().isEmpty()) {
-            NotificationUtil.showWarning("表头字段为空，无法复制");
-            return;
-        }
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("确认复制");
-        confirm.setHeaderText("将表头字段复制到当前列表");
-        confirm.setContentText("这将复制所有表头字段到当前字段列表，是否继续？");
-
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                for (FieldConfigModel headField : billConfigModel.getHeadFields()) {
-                    getFieldsList().add(fieldService.copyFieldFrom(headField));
-                }
-                NotificationUtil.showInfo("已复制 " + billConfigModel.getHeadFields().size() + " 个字段");
-            }
-        });
     }
 
     // ==================== 编码选择器功能 ====================
@@ -559,6 +568,119 @@ public abstract class BaseFieldsController {
         }
     }
 
+    // ==================== 保存模板功能 ====================
+
+    @FXML
+    protected void handleSaveTemplate() {
+        if (getFieldsList().isEmpty()) {
+            NotificationUtil.showWarning("字段列表为空，无法保存模板");
+            return;
+        }
+
+        // 创建保存模板对话框
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("保存字段模板");
+        dialog.setHeaderText("选择保存方式");
+
+        ButtonType saveBasicButtonType = new ButtonType("保存为基础模板", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveCustomButtonType = new ButtonType("另存为自定义模板", ButtonBar.ButtonData.OTHER);
+        ButtonType cancelButtonType = ButtonType.CANCEL;
+        dialog.getDialogPane().getButtonTypes().addAll(saveBasicButtonType, saveCustomButtonType, cancelButtonType);
+
+        // 创建内容面板
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(20));
+
+        Label titleLabel = new Label("当前字段列表包含 " + getFieldsList().size() + " 个字段");
+        titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+
+        Label descLabel = new Label("""
+            选择保存方式：
+            • 保存为基础模板：替换系统默认的基础字段模板
+            • 另存为自定义模板：保存为可复用的自定义模板文件
+            """.trim());
+        descLabel.setWrapText(true);
+        descLabel.setStyle("-fx-text-fill: #666; -fx-font-size: 12px;");
+
+        content.getChildren().addAll(titleLabel, descLabel);
+        dialog.getDialogPane().setContent(content);
+
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == saveBasicButtonType) {
+                saveAsBasicTemplate();
+            } else if (response == saveCustomButtonType) {
+                saveAsCustomTemplate();
+            }
+        });
+    }
+
+    /**
+     * 保存为基础模板（替换系统默认模板）
+     */
+    private void saveAsBasicTemplate() {
+        String templatePath = getBasicTemplatePath();
+        File templateFile = new File(templatePath);
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("确认保存");
+        confirm.setHeaderText("保存为基础模板");
+        confirm.setContentText("这将替换系统默认的基础字段模板文件:\n" + templateFile.getAbsolutePath() + "\n\n是否继续？");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                if (fieldService.saveFieldsAsTemplate(getFieldsList(), templateFile)) {
+                    NotificationUtil.showInfo("基础模板已成功保存到: " + templateFile.getName());
+                } else {
+                    NotificationUtil.showWarning("保存基础模板失败");
+                }
+            }
+        });
+    }
+
+    /**
+     * 另存为自定义模板
+     */
+    private void saveAsCustomTemplate() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("另存为自定义模板");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("JSON 模板文件", "*.json")
+        );
+
+        // 设置默认文件名
+        String billCode = billConfigModel != null ? billConfigModel.getBillCode() : null;
+        String fieldCode = getFieldCode();
+        String defaultFileName = fieldService.getDefaultTemplateName(billCode, fieldCode);
+        fileChooser.setInitialFileName(defaultFileName);
+
+        // 设置初始目录
+        File initialDir = fieldService.getTemplateDirectory();
+        if (initialDir != null && initialDir.exists()) {
+            fileChooser.setInitialDirectory(initialDir);
+        }
+
+        File file = fileChooser.showSaveDialog(fieldsTable.getScene().getWindow());
+        if (file == null) return;
+
+        if (fieldService.saveFieldsAsTemplate(getFieldsList(), file)) {
+            NotificationUtil.showInfo("自定义模板已成功保存到: " + file.getName());
+        } else {
+            NotificationUtil.showWarning("保存自定义模板失败");
+        }
+    }
+
+    /**
+     * 获取基础模板路径
+     */
+    private String getBasicTemplatePath() {
+        String fieldCode = getFieldCode();
+        if ("head".equals(fieldCode)) {
+            return "src/main/resources/templates/field-template-head.json";
+        } else {
+            return "src/main/resources/templates/field-template-body.json";
+        }
+    }
+
     // ==================== 导入模板功能 ====================
 
     @FXML
@@ -569,6 +691,9 @@ public abstract class BaseFieldsController {
             getFieldsList(), billConfigModel, getTemplateResourcePath());
         
         if (result.success) {
+            // 强制刷新UI以确保显示最新的字段类型
+            fieldsTable.refresh();
+            updateFieldCount();
             NotificationUtil.showInfo(result.getMessage());
         } else {
             NotificationUtil.showWarning(result.errorMessage);

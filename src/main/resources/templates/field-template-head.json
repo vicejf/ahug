@@ -1,0 +1,156 @@
+[
+  {
+    "name": "pk_aujy_h",
+    "label": "主键",
+    "type": "UFID",
+    "dbType": "CHAR(20)",
+    "length": 20,
+    "uiType": "Text",
+    "required": true,
+    "primaryKey": true,
+    "editable": false
+  },
+  {
+    "name": "pk_corp",
+    "label": "公司",
+    "type": "",
+    "dbType": "",
+    "length": 20,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "billno",
+    "label": "单据号",
+    "type": "String",
+    "dbType": "VARCHAR(50)",
+    "length": 50,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "billdate",
+    "label": "单据日期",
+    "type": "UFDate",
+    "dbType": "CHAR(10)",
+    "length": 10,
+    "uiType": "Date",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "maker",
+    "label": "制单人",
+    "type": "String",
+    "dbType": "VARCHAR(50)",
+    "length": 50,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "makedate",
+    "label": "制单日期",
+    "type": "UFDate",
+    "dbType": "CHAR(10)",
+    "length": 10,
+    "uiType": "Date",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "approver",
+    "label": "审批人",
+    "type": "String",
+    "dbType": "VARCHAR(50)",
+    "length": 50,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "approvedate",
+    "label": "审批日期",
+    "type": "UFDate",
+    "dbType": "CHAR(10)",
+    "length": 10,
+    "uiType": "Date",
+    "required": false,
+    "primaryKey": false,
+    "editable": false
+  },
+  {
+    "name": "bz",
+    "label": "备注",
+    "type": "String",
+    "dbType": "VARCHAR(500)",
+    "length": 500,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "vdef1",
+    "label": "自定义1",
+    "type": "String",
+    "dbType": "VARCHAR(500)",
+    "length": 500,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "vdef2",
+    "label": "自定义2",
+    "type": "String",
+    "dbType": "VARCHAR(500)",
+    "length": 500,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "vdef3",
+    "label": "自定义3",
+    "type": "String",
+    "dbType": "VARCHAR(500)",
+    "length": 500,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "vdef4",
+    "label": "自定义4",
+    "type": "String",
+    "dbType": "VARCHAR(500)",
+    "length": 500,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  },
+  {
+    "name": "vdef5",
+    "label": "自定义5",
+    "type": "String",
+    "dbType": "VARCHAR(500)",
+    "length": 500,
+    "uiType": "Text",
+    "required": false,
+    "primaryKey": false,
+    "editable": true
+  }
+]

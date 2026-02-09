@@ -1,0 +1,113 @@
+{
+  "headFields": [],
+  "bodyFields": [
+    {
+      "name": "pk_aujy_h",
+      "label": "主键",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": true,
+      "primaryKey": true,
+      "editable": false,
+      "visible": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "pk_org",
+      "label": "组织",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": true,
+      "primaryKey": true,
+      "editable": false,
+      "visible": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "billno",
+      "label": "单据号",
+      "type": "String",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": true,
+      "primaryKey": false,
+      "editable": true,
+      "visible": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "billdate",
+      "label": "单据日期",
+      "type": "Date",
+      "dbType": "DATE",
+      "length": 0,
+      "required": true,
+      "primaryKey": false,
+      "editable": true,
+      "visible": true,
+      "uiType": "Date"
+    },
+    {
+      "name": "maker",
+      "label": "制单人",
+      "type": "String",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "visible": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "makedate",
+      "label": "制单日期",
+      "type": "Date",
+      "dbType": "DATE",
+      "length": 0,
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "visible": true,
+      "uiType": "Date"
+    },
+    {
+      "name": "approver",
+      "label": "审批人",
+      "type": "String",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "visible": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "approvedate",
+      "label": "审批日期",
+      "type": "Date",
+      "dbType": "DATE",
+      "length": 0,
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "visible": true,
+      "uiType": "Date"
+    },
+    {
+      "name": "bz",
+      "label": "备注",
+      "type": "String",
+      "dbType": "VARCHAR2(500)",
+      "length": 500,
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "visible": true,
+      "uiType": "Text"
+    }
+  ]
+}

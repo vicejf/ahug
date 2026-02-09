@@ -218,9 +218,10 @@ public class TemplateSelector {
                 templatePath = TEMPLATES_BASE + "METADATA/common/SingleHeadBMF.vm";
                 break;
             case MULTI:
-                // 多表头暂时不支持元数据生成，返回null
-                logger.warn("多表头单据 {} 暂不支持元数据生成", billConfig.getBillCode());
-                return null;
+                // 临时支持多表体元数据生成，使用单表头模板
+                logger.info("多表体单据 {} 使用单表头元数据模板", billConfig.getBillCode());
+                templatePath = TEMPLATES_BASE + "METADATA/common/SingleHeadBMF.vm";
+                break;
             default:
                 logger.warn("未知的单据类型: {}, 使用单表头元数据模板", billType);
                 templatePath = TEMPLATES_BASE + "METADATA/common/SingleHeadBMF.vm";

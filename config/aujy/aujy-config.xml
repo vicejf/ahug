@@ -6,9 +6,10 @@
         <billCode>AUJY</billCode>
         <billName>CESHI2</billName>
         <module></module>
-        <packageName></packageName>
-        <bodyCode>AUJYBVO</bodyCode>
-        <billType>multi</billType>
+        <packageName>ahu</packageName>
+        <bodyCode></bodyCode>
+        <headCode>AUJYHVO</headCode>
+        <billType>single</billType>
         <description></description>
     </basicInfo>
     <fieldPaths>
@@ -17,13 +18,6 @@
         <bodyFieldsPath>AUJYBVO.json</bodyFieldsPath>
     </fieldPaths>
     <globalConfig>
-        <generateOptions>
-            <!-- 代码生成选项 -->
-            <generateClient>true</generateClient>
-            <generateBusiness>true</generateBusiness>
-            <generateMetadata>false</generateMetadata>
-            <syncAfterGenerate>false</syncAfterGenerate>
-        </generateOptions>
         <metadataSwitches>
             <!-- 元数据生成开关 -->
             <enablePubBillInterface>true</enablePubBillInterface>

@@ -172,7 +172,8 @@ public class XmlConfigParser {
 
     /**
      * 从 BillConfig XML 中解析全局配置信息
-     * 注意：projectConfig（sourcePath、outputDir、author）已从单据配置中移除，改从全局 INI 配置读取
+     * 注意：生成选项（generateOptions）已从单据配置中移除，改从全局 INI 配置读取
+     * 只解析元数据相关配置（metadataSwitches、metadataIds、referenceIds、connectionIds、enums）
      */
     private void parseGlobalInfoFromBill(Element root, BillConfig billConfig) {
         GlobalConfig globalConfig = new GlobalConfig();
@@ -180,29 +181,8 @@ public class XmlConfigParser {
         // 从 globalConfig 子节点读取
         Element globalConfigElement = root.element("globalConfig");
         if (globalConfigElement != null) {
-            // 解析生成选项
-            Element generateOptionsElement = globalConfigElement.element("generateOptions");
-            if (generateOptionsElement != null) {
-                String generateClient = generateOptionsElement.elementText("generateClient");
-                if (generateClient != null) {
-                    globalConfig.setGenerateClient(Boolean.parseBoolean(generateClient));
-                }
-
-                String generateBusiness = generateOptionsElement.elementText("generateBusiness");
-                if (generateBusiness != null) {
-                    globalConfig.setGenerateBusiness(Boolean.parseBoolean(generateBusiness));
-                }
-
-                String generateMetadata = generateOptionsElement.elementText("generateMetadata");
-                if (generateMetadata != null) {
-                    globalConfig.setGenerateMetadata(Boolean.parseBoolean(generateMetadata));
-                }
-
-                String syncAfterGenerate = generateOptionsElement.elementText("syncAfterGenerate");
-                if (syncAfterGenerate != null) {
-                    globalConfig.setSyncAfterGenerate(Boolean.parseBoolean(syncAfterGenerate));
-                }
-            }
+            // 注意：生成选项不再从单据配置中读取，由全局配置统一管理
+            // 保留元数据相关配置的解析
 
             // 解析元数据生成开关
             Element metadataSwitchesElement = globalConfigElement.element("metadataSwitches");

@@ -38,6 +38,7 @@ public class TemplateContext {
         // 添加常用的工具方法
         velocityContext.put("now", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         velocityContext.put("year", new SimpleDateFormat("yyyy").format(new Date()));
+        velocityContext.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
         return velocityContext;
     }

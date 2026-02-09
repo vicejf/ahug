@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 /**
  * 表体字段标签页控制器
  */
-public class BodyFieldsController extends BaseFieldsController {
+public class BodyFieldsController extends FieldsController {
 
     @Override
     protected ObservableList<FieldConfigModel> getFieldsList() {
