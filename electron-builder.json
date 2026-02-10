@@ -1,0 +1,56 @@
+{
+  "appId": "com.ahug.app",
+  "productName": "Ahug Code Generator",
+  "directories": {
+    "output": "release/${version}",
+    "buildResources": "assets",
+    "app": "."
+  },
+  "icon": "public/vite.svg",
+  "files": [
+    "dist/**/*",
+    "electron/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
+  "asar": true,
+  "extraResources": [
+    {
+      "from": "public/",
+      "to": "assets/"
+    }
+  ],
+  "win": {
+    "target": [
+      "zip"
+    ],
+    "artifactName": "${productName}_${version}.${ext}",
+    "publisherName": "Ahug Team"
+  },
+  "mac": {
+    "target": [
+      "dmg",
+      "zip"
+    ],
+    "category": "public.app-category.developer-tools"
+  },
+  "linux": {
+    "target": [
+      "AppImage",
+      "deb",
+      "rpm"
+    ],
+    "category": "Development"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Ahug Code Generator"
+  },
+  "buildDependenciesFromSource": true,
+  "npmRebuild": true
+}

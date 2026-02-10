@@ -62,6 +62,10 @@ declare global {
       storeClearRecentFiles: () => Promise<void>;
       storeGetStatistics: () => Promise<{ configFiles: number; generationCount: number; lastGenerated: string }>;
       storeSaveStatistics: (stats: { configFiles: number; generationCount: number; lastGenerated: string }) => Promise<void>;
+      // Config file operations
+      selectConfigDirectory: () => Promise<{ success: boolean; path?: string; error?: string }>;
+      scanConfigFiles: () => Promise<{ success: boolean; files?: string[]; error?: string }>;
+      getFileStats: (filePath: string) => Promise<{ success: boolean; stats?: { mtime: Date; size: number }; error?: string }>;
     };
   }
 }

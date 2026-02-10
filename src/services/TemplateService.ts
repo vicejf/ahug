@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 class TemplateService {
   private static readonly TEMPLATES_STORAGE_KEY = 'field_templates';
-  private static readonly BASIC_HEAD_TEMPLATE_FILE = 'head-basic.json';
-  private static readonly BASIC_BODY_TEMPLATE_FILE = 'body-basic.json';
-  private static readonly CUSTOM_TEMPLATES_DIR = './templates';
+  // private static readonly BASIC_HEAD_TEMPLATE_FILE = 'head-basic.json';
+  // private static readonly BASIC_BODY_TEMPLATE_FILE = 'body-basic.json';
+  // private static readonly CUSTOM_TEMPLATES_DIR = './templates';
 
   constructor() {
     this.initializeBasicTemplates();
@@ -397,7 +397,7 @@ class TemplateService {
 
     return {
       fields,
-      metadata: data.metadata
+      metadata: data.metadata as Record<string, unknown> | undefined
     };
   }
 
@@ -430,6 +430,7 @@ class TemplateService {
    */
   private async simulateFileRead(_fileName: string): Promise<string> {
     // This is a placeholder - in real implementation, integrate with FileService
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return Promise.resolve(`{"fields": []}`);
   }
 }

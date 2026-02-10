@@ -106,6 +106,10 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
     setEditingKey('');
   };
 
+  const handleCancel = () => {
+    setEditingKey('');
+  };
+
   const handleImportFields = (importedFields: FieldConfig[]) => {
     // Merge imported fields with existing fields, avoiding duplicates
     const existingNames = new Set(fields.map(f => f.name));

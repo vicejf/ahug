@@ -1,9 +1,53 @@
 {
-  "name": "antd-demo",
+  "name": "ahug-code-generator",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "main": "electron/main.js",
+  "description": "A code generator tool for creating various code templates",
+  "author": "Ahug Team",
+  "homepage": "https://github.com/your-organization/ahug",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-organization/ahug.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-organization/ahug/issues"
+  },
+  "build": {
+    "appId": "com.ahug.app",
+    "productName": "Ahug Code Generator",
+    "directories": {
+      "output": "release/${version}",
+      "buildResources": "assets",
+      "app": "."
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "zip"
+      ],
+      "artifactName": "${productName}_${version}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "zip"
+      ]
+    },
+    "mac": {
+      "target": [
+        "zip"
+      ]
+    },
+    "electronVersion": "40.2.1"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
