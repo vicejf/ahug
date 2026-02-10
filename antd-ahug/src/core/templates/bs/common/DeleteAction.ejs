@@ -1,0 +1,18 @@
+package nc.bs.<%= bill.module %>.<%= bill.billCode.toLowerCase() %>;
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.<%= bill.module %>.I<%= bill.billCode %>;
+import nc.vo.pub.BusinessException;
+
+/**
+ * <%= bill.billName %> 删除动作
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ */
+public class DeleteAction {
+
+    public void delete(String[] pkArray) throws BusinessException {
+        I<%= bill.billCode %> service = NCLocator.getInstance().lookup(I<%= bill.billCode %>.class);
+        service.delete(pkArray);
+    }
+}

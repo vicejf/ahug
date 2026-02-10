@@ -1,0 +1,47 @@
+package nc.ui.<%= bill.packageName %>.<%= bill.billCode.toLowerCase() %>.refmodel;
+
+import nc.ui.bd.ref.AbstractRefModel;
+import nc.ui.bd.ref.RefColumnInfo;
+
+/**
+ * <%= bill.billName %> 参照模型
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ */
+public class RefModel extends AbstractRefModel {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public String[] getFieldCodes() {
+        return new String[]{"code", "name"};
+    }
+
+    @Override
+    public String[] getFieldNames() {
+        return new String[]{"编码", "名称"};
+    }
+
+    @Override
+    public RefColumnInfo[] getRefColumnInfo() {
+        return new RefColumnInfo[]{
+            new RefColumnInfo("code", "编码", 100),
+            new RefColumnInfo("name", "名称", 200)
+        };
+    }
+
+    @Override
+    public String getPkFieldCode() {
+        return "pk";
+    }
+
+    @Override
+    public String getRefTitle() {
+        return "<%= bill.billName %>";
+    }
+
+    @Override
+    public String getTableName() {
+        return "<%= bill.tableName || `ahu_${bill.billCode.toLowerCase()}_h` %>";
+    }
+}

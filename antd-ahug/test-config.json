@@ -1,0 +1,236 @@
+{
+  "billCode": "AUJZ",
+  "billName": "生产入库单",
+  "module": "ahu",
+  "packageName": "ui.ahu",
+  "bodyCode": "AUJZBVO",
+  "billType": "single",
+  "description": "生产入库单据配置",
+  "headFields": [
+    {
+      "name": "pk_aujz",
+      "label": "主键",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": true,
+      "primaryKey": true,
+      "editable": false,
+      "uiType": "Text"
+    },
+    {
+      "name": "billno",
+      "label": "单据号",
+      "type": "String",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": true,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "billdate",
+      "label": "单据日期",
+      "type": "UFDate",
+      "dbType": "DATE",
+      "required": true,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "DateTime"
+    },
+    {
+      "name": "corp",
+      "label": "公司",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": true,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Combo",
+      "refModelName": "公司目录(集团)"
+    },
+    {
+      "name": "vbusitype",
+      "label": "业务类型",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Combo",
+      "refModelName": "业务类型"
+    },
+    {
+      "name": "operatorid",
+      "label": "制单人",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Combo",
+      "refModelName": "操作员"
+    },
+    {
+      "name": "reviewer",
+      "label": "审批人",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Combo",
+      "refModelName": "操作员"
+    },
+    {
+      "name": "vstatus",
+      "label": "单据状态",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Combo",
+      "refModelName": "单据状态"
+    },
+    {
+      "name": "reviewnote",
+      "label": "审批批语",
+      "type": "String",
+      "dbType": "VARCHAR2(500)",
+      "length": 500,
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "reviewdate",
+      "label": "审批日期",
+      "type": "UFDate",
+      "dbType": "DATE",
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "DateTime"
+    },
+    {
+      "name": "dr",
+      "label": "删除标志",
+      "type": "Integer",
+      "dbType": "NUMBER(10)",
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "uiType": "Text",
+      "defaultValue": "0"
+    },
+    {
+      "name": "ts",
+      "label": "时间戳",
+      "type": "UFDateTime",
+      "dbType": "DATE",
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "uiType": "DateTime"
+    }
+  ],
+  "bodyFields": [
+    {
+      "name": "pk_aujz_b",
+      "label": "表体主键",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": true,
+      "primaryKey": true,
+      "editable": false,
+      "uiType": "Text"
+    },
+    {
+      "name": "parentid",
+      "label": "父主键",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": true,
+      "primaryKey": false,
+      "editable": false,
+      "uiType": "Text"
+    },
+    {
+      "name": "rowno",
+      "label": "行号",
+      "type": "Integer",
+      "dbType": "NUMBER(10)",
+      "required": false,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "material",
+      "label": "物料",
+      "type": "String",
+      "dbType": "VARCHAR2(20)",
+      "length": 20,
+      "required": true,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Combo",
+      "refModelName": "物料基本(集团)"
+    },
+    {
+      "name": "quantity",
+      "label": "数量",
+      "type": "UFDouble",
+      "dbType": "NUMBER(20,8)",
+      "required": true,
+      "primaryKey": false,
+      "editable": true,
+      "uiType": "Text"
+    },
+    {
+      "name": "dr",
+      "label": "删除标志",
+      "type": "Integer",
+      "dbType": "NUMBER(10)",
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "uiType": "Text",
+      "defaultValue": "0"
+    },
+    {
+      "name": "ts",
+      "label": "时间戳",
+      "type": "UFDateTime",
+      "dbType": "DATE",
+      "required": false,
+      "primaryKey": false,
+      "editable": false,
+      "uiType": "DateTime"
+    }
+  ],
+  "bodyCodeList": [],
+  "globalConfig": {
+    "outputDir": "./output",
+    "sourcePath": "",
+    "author": "Flynn Chen",
+    "syncAfterGenerate": true,
+    "generateClient": true,
+    "generateBusiness": true,
+    "generateMetadata": true,
+    "enablePubBillInterface": true,
+    "enableUser": true,
+    "enableBillStatus": true,
+    "enums": []
+  }
+}

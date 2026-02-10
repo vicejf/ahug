@@ -1,0 +1,146 @@
+package nc.vo.<%= bill.packageName %>.<%= bill.billCode.toLowerCase() %>;
+
+import java.util.Set;
+
+import nc.vo.dygpubapp.appframe.entity.def.ISuperVO;
+import nc.vo.dygpubapp.appframe.entity.util.SuperVOHelper;
+import nc.vo.dygpubapp.appframe.meta.def.IVOMeta;
+import nc.vo.dygpubapp.appframe.meta.impl.VOMetaFactory;
+import nc.vo.pub.*;
+
+/**
+ * <%= bill.billName %>
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ * @version NCPrj 1.0
+ */
+@SuppressWarnings("serial")
+<% 
+const headVoClassName = bill.headCode || (bill.billCode.endsWith('H') ? bill.billCode + 'VO' : bill.billCode + 'HVO');
+%>
+public class <%= headVoClassName %> extends SuperVO implements ISuperVO{
+	
+	<% 
+	const tableName = bill.tableName || `ahu_${bill.billCode.toLowerCase()}_h`;
+	%>
+	public static final String TABLENAME="<%= tableName %>";
+	
+<% bill.headFields.forEach(field => { %>
+	private <%= field.type %>.charAt(0).toUpperCase() + field.name.slice(1) %> () {
+		return <%= field.name %>;
+	}   
+	/**
+	 * 属性<%= field.name %>的Setter方法.
+	 * 创建日期:<%= date %>
+	 * @param new<%= field.name.charAt(0).toUpperCase() + field.name.slice(1) %> <%= field.type %>
+	 */
+	public void set<%= field.name.charAt(0).toUpperCase() + field.name.slice(1) %> (<%= field.type %> new<%= field.name.charAt(0).toUpperCase() + field.name.slice(1) %> ) {
+	 	this.<%= field.name %> = new<%= field.name.charAt(0).toUpperCase() + field.name.slice(1) %>;
+	} 	  
+<% }) %>
+	/**
+	 * 属性dr的Getter方法.
+	 * 创建日期:<%= date %>
+	 * @return java.lang.Integer
+	 */
+	public java.lang.Integer getDr () {
+		return dr;
+	}   
+	/**
+	 * 属性dr的Setter方法.
+	 * 创建日期:<%= date %>
+	 * @param newDr java.lang.Integer
+	 */
+	public void setDr (java.lang.Integer newDr ) {
+	 	this.dr = newDr;
+	} 	  
+	/**
+	 * 属性ts的Getter方法.
+	 * 创建日期:<%= date %>
+	 * @return nc.vo.pub.lang.UFDateTime
+	 */
+	public nc.vo.pub.lang.UFDateTime getTs () {
+		return ts;
+	}   
+	/**
+	 * 属性ts的Setter方法.
+	 * 创建日期:<%= date %>
+	 * @param newTs nc.vo.pub.lang.UFDateTime
+	 */
+	public void setTs (nc.vo.pub.lang.UFDateTime newTs ) {
+	 	this.ts = newTs;
+	} 	  
+ 
+	/**
+	  * <p>取得该VO父对象字段.
+	  * <p>
+	  * 创建日期:<%= date %>
+	  * @return java.lang.String
+	  */
+	public java.lang.String getParentPKFieldName() {
+	    return null;
+	}   
+    
+	/**
+	  * <p>取得表主键.
+	  * <p>
+	  * 创建日期:<%= date %>
+	  * @return java.lang.String
+	  */
+	public java.lang.String getPKFieldName() {
+	  return <%= bill.headFields[0].name.toUpperCase() %>;
+	}
+    
+	/**
+	 * <p>返回表名称.
+	 * <p>
+	 * 创建日期:<%= date %>
+	 * @return java.lang.String
+	 */
+	public java.lang.String getTableName() {
+		return TABLENAME;
+	}    
+    
+    /**
+	  * 按照默认方式创建构造子.
+	  *
+	  * 创建日期:<%= date %>
+	  */
+     public <%= headVoClassName %>() {
+		super();	
+	}    
+     
+     public IVOMeta getMetaData() {
+ 		IVOMeta vOMeta = VOMetaFactory.getInstance().getVOMeta("<%= bill.billCode.toLowerCase() %>.<%= headVoClassName %>");
+ 		return vOMeta;
+ 	}
+
+ 	public Set<String> usedAttributeNames() {
+ 		return SuperVOHelper.usedAttributeNames(this);
+ 	}
+
+ 	public Object getAttributeValue(String attributeName) {
+ 		return SuperVOHelper.getAttributeValue(this, attributeName);
+ 	}
+
+
+ 	@Override
+ 	public void setAttributeValue(String attributeName, Object value) {
+ 		SuperVOHelper.setAttributeValue(this, attributeName, value);
+ 	}
+
+ 	@Override
+ 	public String getPrimaryKey() {
+ 		return SuperVOHelper.getPrimaryKey(this);
+ 	}
+
+ 	@Override
+ 	public void setPrimaryKey(String key) {
+ 		SuperVOHelper.setPrimaryKey(this, key);
+ 	}
+
+ 	@Override
+ 	public String[] getAttributeNames() {
+ 		return SuperVOHelper.getAttributeNames(this);
+ 	}
+}

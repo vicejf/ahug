@@ -1,0 +1,18 @@
+package nc.bs.<%= bill.module %>.pub.action;
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.<%= bill.module %>.I<%= bill.billCode %>;
+import nc.vo.pub.BusinessException;
+
+/**
+ * <%= bill.billName %> 批量写入动作
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ */
+public class N_<%= bill.billCode %>_WRITEBATCH {
+
+    public void writeBatch(String[] pkArray) throws BusinessException {
+        I<%= bill.billCode %> service = NCLocator.getInstance().lookup(I<%= bill.billCode %>.class);
+        service.writeBatch(pkArray);
+    }
+}
