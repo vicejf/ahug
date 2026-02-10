@@ -1,0 +1,30 @@
+package nc.bs.<%= bill.packageName %>.<%= bill.classNameLower %>;
+
+import nc.impl.dygpubapp.persitence.bill.BillQuery;
+import nc.impl.dygpubapp.persitence.vo.VOQuery;
+import nc.vo.<%= bill.packageName %>.<%= bill.classNameLower %>.<%= bill.headCode %>VO;
+import nc.vo.<%= bill.packageName %>.<%= bill.classNameLower %>.Agg<%= bill.className %>VO;
+import nc.vo.pub.SuperVO;
+
+public class QueryAction {
+	public SuperVO[] queryByCondition(Class voClass, String whereSql) {
+		SuperVO[] vos = null;
+		if (voClass.getName().equals(<%= bill.headCode %>VO.class.getName())) {
+			vos = this.queryHeadData(whereSql, null);
+		}
+		return vos;
+	}
+
+	public <%= bill.headCode %>VO[] queryHeadData(String whereSql, String order) {
+		VOQuery<<%= bill.headCode %>VO> querybo = new VOQuery<<%= bill.headCode %>VO>(<%= bill.headCode %>VO.class);
+		<%= bill.headCode %>VO[] headvos = querybo.queryWithWhereKeyWord(whereSql,order);
+		return headvos;
+	}
+
+	public Agg<%= bill.className %>VO[] queryBillData(String[] keys) {
+		BillQuery<Agg<%= bill.className %>VO> querybo = new BillQuery<Agg<%= bill.className %>VO>(Agg<%= bill.className %>VO.class);
+		Agg<%= bill.className %>VO[] billvos = querybo.query(keys);
+		return billvos;
+	}
+
+}

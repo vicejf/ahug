@@ -1,0 +1,41 @@
+package nc.bs.<%= bill.module %>.<%= bill.billCode.toLowerCase() %>;
+
+import nc.bs.framework.ejb.BaseEJB;
+import nc.bs.framework.ejb.EjbFactory;
+import nc.itf.<%= bill.module %>.I<%= bill.billCode %>;
+import nc.vo.<%= bill.packageName %>.<%= bill.billCode.toLowerCase() %>.Agg<%= bill.billCode %>VO;
+import nc.vo.pub.AggregatedValueObject;
+
+/**
+ * <%= bill.billName %> 服务实现
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ */
+public class <%= bill.billCode %>Impl extends BaseEJB implements I<%= bill.billCode %> {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public AggregatedValueObject insert(AggregatedValueObject billVO) throws Exception {
+        return null;
+    }
+
+    @Override
+    public AggregatedValueObject update(AggregatedValueObject billVO) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void delete(String[] pkArray) throws Exception {
+    }
+
+    @Override
+    public AggregatedValueObject[] save(AggregatedValueObject[] billVOs) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Agg<%= bill.billCode %>VO[] query(String[] pkArray) throws Exception {
+        return null;
+    }
+}

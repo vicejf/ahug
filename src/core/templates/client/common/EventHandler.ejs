@@ -1,0 +1,17 @@
+package nc.ui.<%= bill.packageName %>.<%= bill.billCode.toLowerCase() %>.handler;
+
+import nc.ui.uif2.events.AppEvent;
+import nc.ui.uif2.events.EventHandlerAdapter;
+
+/**
+ * <%= bill.billName %> 事件处理器
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ */
+public class EventHandler extends EventHandlerAdapter {
+
+    @Override
+    public void handleEvent(AppEvent event) {
+        super.handleEvent(event);
+    }
+}

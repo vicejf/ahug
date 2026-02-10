@@ -1,0 +1,22 @@
+package nc.itf.<%= bill.module %>;
+
+import nc.vo.<%= bill.packageName %>.<%= bill.billCode.toLowerCase() %>.Agg<%= bill.billCode %>VO;
+import nc.vo.pub.AggregatedValueObject;
+
+/**
+ * <%= bill.billName %> 服务接口
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ */
+public interface I<%= bill.billCode %> {
+
+    AggregatedValueObject insert(AggregatedValueObject billVO) throws Exception;
+
+    AggregatedValueObject update(AggregatedValueObject billVO) throws Exception;
+
+    void delete(String[] pkArray) throws Exception;
+
+    AggregatedValueObject[] save(AggregatedValueObject[] billVOs) throws Exception;
+
+    Agg<%= bill.billCode %>VO[] query(String[] pkArray) throws Exception;
+}

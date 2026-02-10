@@ -1,0 +1,18 @@
+package nc.bs.<%= bill.module %>.pub.action;
+
+import nc.bs.framework.common.NCLocator;
+import nc.itf.<%= bill.module %>.I<%= bill.billCode %>;
+import nc.vo.pub.BusinessException;
+
+/**
+ * <%= bill.billName %> 审批动作
+ * 创建日期:<%= date %>
+ * @author <%= bill.globalConfig?.author || 'Unknown' %>
+ */
+public class N_<%= bill.billCode %>_APPROVE {
+
+    public void approve(String[] pkArray, String approveNote) throws BusinessException {
+        I<%= bill.billCode %> service = NCLocator.getInstance().lookup(I<%= bill.billCode %>.class);
+        service.approve(pkArray, approveNote);
+    }
+}
