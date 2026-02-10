@@ -184,6 +184,85 @@ ipcMain.handle('file:list-directory', async (event, dirPath) => {
   }
 });
 
+// 获取文件统计信息
+ipcMain.handle('file:get-stats', async (event, filePath) => {
+  try {
+    const stats = await fsPromises.stat(filePath);
+    return { 
+      success: true, 
+      stats: { 
+        mtime: stats.mtime, 
+        size: stats.size 
+      } 
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return { success: false, error: errorMessage };
+  }
+});
+
+// 选择配置目录
+ipcMain.handle('config:select-directory', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    properties: ['openDirectory'],
+    title: '选择配置文件目录',
+  });
+  
+  if (result.canceled) {
+    return { success: false, error: '用户取消选择' };
+  }
+  
+  const selectedPath = result.filePaths[0];
+  
+  // 保存到 store
+  if (store) {
+    store.set('configDirectory', selectedPath);
+  }
+  
+  return { success: true, path: selectedPath };
+});
+
+// 扫描配置文件
+ipcMain.handle('config:scan-files', async () => {
+  try {
+    // 从 store 获取配置目录
+    const configDir = store ? store.get('configDirectory') : null;
+    
+    if (!configDir) {
+      return { success: false, error: '未设置配置目录，请先选择配置目录' };
+    }
+    
+    // 递归扫描目录中的 .xml 文件
+    const xmlFiles = [];
+    
+    async function scanDirectory(dirPath) {
+      try {
+        const entries = await fsPromises.readdir(dirPath, { withFileTypes: true });
+        
+        for (const entry of entries) {
+          const fullPath = path.join(dirPath, entry.name);
+          
+          if (entry.isDirectory()) {
+            // 递归扫描子目录
+            await scanDirectory(fullPath);
+          } else if (entry.isFile() && entry.name.endsWith('.xml')) {
+            xmlFiles.push(fullPath);
+          }
+        }
+      } catch (error) {
+        console.warn(`无法扫描目录 ${dirPath}:`, error);
+      }
+    }
+    
+    await scanDirectory(configDir);
+    
+    return { success: true, files: xmlFiles };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return { success: false, error: errorMessage };
+  }
+});
+
 // IPC 处理 - Store 相关操作
 
 ipcMain.handle('store:get', (event, key, defaultValue) => {

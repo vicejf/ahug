@@ -30,6 +30,7 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import BodyFieldsTable from '../components/BodyFieldsTable';
+import ConfigSelectorModal from '../components/ConfigSelectorModal';
 import EnumConfigTable from '../components/EnumConfigTable';
 import HeadFieldsTable from '../components/HeadFieldsTable';
 import ConfigFileService from '../services/ConfigFileService';
@@ -56,6 +57,7 @@ export default function ConfigurationEditor() {
   const [currentBodyCode, setCurrentBodyCode] = useState<string>('');
   const [unsavedChangesModalVisible, setUnsavedChangesModalVisible] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+  const [configSelectorVisible, setConfigSelectorVisible] = useState(false);
 
   useEffect(() => {
     form.setFieldsValue(config.basicInfo);
@@ -163,45 +165,21 @@ export default function ConfigurationEditor() {
     });
   };
 
-  const handleOpenConfig = async () => {
-    console.log('handleOpenConfig called');
+  const handleLoadConfig = () => {
     checkUnsavedChanges(() => {
-      console.log('Inside checkUnsavedChanges callback');
-      // 将异步操作包装在一个立即执行的异步函数中
-      (async () => {
-        try {
-          console.log('Calling FileService.openFile()');
-          const result = await FileService.openFile();
-          console.log('FileService.openFile() result:', result);
-          
-          if (result.success && result.filePath) {
-            console.log('Loading config from:', result.filePath);
-            const loadResult = await ConfigFileService.loadConfig(result.filePath);
-            console.log('ConfigFileService.loadConfig result:', loadResult);
-            
-            if (loadResult.success && loadResult.config) {
-              setConfig(loadResult.config);
-              form.setFieldsValue(loadResult.config.basicInfo);
-              setCurrentBodyCode(loadResult.config.bodyCodeList[0] || '');
-              ConfigManager.setCurrentConfigPath(result.filePath);
-              ConfigManager.addToRecentFiles(result.filePath);
-              setIsModified(false);
-              messageApi.success(`已加载: ${result.filePath}`);
-            } else {
-              messageApi.error('加载配置失败: ' + (loadResult.error || '未知错误'));
-            }
-          } else {
-            console.log('File selection cancelled or failed');
-            if (result.error) {
-              messageApi.error('打开文件失败: ' + result.error);
-            }
-          }
-        } catch (error) {
-          console.error('Error in handleOpenConfig:', error);
-          messageApi.error('操作失败: ' + (error instanceof Error ? error.message : '未知错误'));
-        }
-      })();
+      setConfigSelectorVisible(true);
     });
+  };
+
+  const handleConfigSelected = (loadedConfig: BillConfigData, filePath: string) => {
+    setConfig(loadedConfig);
+    form.setFieldsValue(loadedConfig.basicInfo);
+    setCurrentBodyCode(loadedConfig.bodyCodeList[0] || '');
+    ConfigManager.setCurrentConfigPath(filePath);
+    ConfigManager.addToRecentFiles(filePath);
+    setIsModified(false);
+    setConfigSelectorVisible(false);
+    messageApi.success(`已加载配置: ${loadedConfig.basicInfo.billCode}`);
   };
 
   const handleSaveConfig = async () => {
@@ -586,13 +564,13 @@ export default function ConfigurationEditor() {
 
           {/* Right: Action Buttons */}
           <Space size="small">
-            <Tooltip title="打开配置文件">
+            <Tooltip title="加载配置文件">
               <Button
                 icon={<FolderOpenOutlined />}
-                onClick={handleOpenConfig}
+                onClick={handleLoadConfig}
                 size="middle"
               >
-                打开
+                加载
               </Button>
             </Tooltip>
             <Tooltip title="新建配置">
@@ -644,6 +622,13 @@ export default function ConfigurationEditor() {
             }}
           />
         </Content>
+
+        {/* Config Selector Modal */}
+        <ConfigSelectorModal
+          open={configSelectorVisible}
+          onCancel={() => setConfigSelectorVisible(false)}
+          onConfigSelected={handleConfigSelected}
+        />
 
         {/* Unsaved Changes Modal */}
         <Modal

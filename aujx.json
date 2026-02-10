@@ -1,0 +1,24 @@
+[
+  {
+    "name": "newField0",
+    "label": "新字段",
+    "type": "String",
+    "dbType": "VARCHAR2(50)",
+    "length": 50,
+    "required": false,
+    "editable": true,
+    "primaryKey": false,
+    "uiType": "Text"
+  },
+  {
+    "name": "newField1",
+    "label": "新字段",
+    "type": "String",
+    "dbType": "VARCHAR2(50)",
+    "length": 50,
+    "required": false,
+    "editable": true,
+    "primaryKey": false,
+    "uiType": "Text"
+  }
+]

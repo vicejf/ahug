@@ -22,6 +22,15 @@ export interface EnumItem {
   value: string;
 }
 
+export interface SqlField {
+  columnName: string;
+  dataType: string;
+  dataLength?: number;
+  nullable: boolean;
+  defaultValue?: string;
+  comment?: string;
+}
+
 export interface BillConfigData {
   basicInfo: {
     billCode: string;
@@ -47,4 +56,29 @@ export interface BillConfigData {
     generateBusiness: boolean;
     generateMetadata: boolean;
   };
+}
+
+// Template interfaces for import/export functionality
+export interface FieldTemplate {
+  id: string;
+  name: string;
+  type: 'basic' | 'custom';
+  category: 'head' | 'body';
+  fields: FieldConfig[];
+  createdAt: string;
+  updatedAt: string;
+  description?: string;
+}
+
+export interface ImportData {
+  fields: FieldConfig[];
+  metadata?: Record<string, unknown>;
+}
+
+export interface TemplateImportOptions {
+  source: 'file' | 'paste' | 'basic';
+  fileType?: 'json' | 'sql';
+  fileName?: string;
+  content?: string;
+  category?: 'head' | 'body';
 }

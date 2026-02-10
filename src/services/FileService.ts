@@ -118,7 +118,7 @@ class FileService {
     if (this.isElectron) {
       try {
         return await window.electronAPI!.fileExists(filePath);
-      } catch (error) {
+      } catch (err) {
         return false;
       }
     } else {
@@ -145,6 +145,59 @@ class FileService {
           { name: 'configs', isDirectory: true, size: 0 }
         ]
       };
+    }
+  }
+
+  async scanConfigFiles(): Promise<{ success: boolean; files?: string[]; error?: string }> {
+    if (this.isElectron) {
+      try {
+        const result = await window.electronAPI!.scanConfigFiles();
+        return result;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        return { success: false, error: errorMessage };
+      }
+    } else {
+      // Fallback for web version
+      return {
+        success: true,
+        files: ['sample1.xml', 'sample2.xml']
+      };
+    }
+  }
+
+  async getFileStats(filePath: string): Promise<{ success: boolean; stats?: { mtime: Date; size: number }; error?: string }> {
+    if (this.isElectron) {
+      try {
+        return await window.electronAPI!.getFileStats(filePath);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        return { success: false, error: errorMessage };
+      }
+    } else {
+      // Fallback for web version
+      return {
+        success: true,
+        stats: {
+          mtime: new Date(),
+          size: 1024
+        }
+      };
+    }
+  }
+
+  async selectConfigDirectory(): Promise<{ success: boolean; path?: string; error?: string }> {
+    if (this.isElectron) {
+      try {
+        const result = await window.electronAPI!.selectConfigDirectory();
+        return result;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        return { success: false, error: errorMessage };
+      }
+    } else {
+      // Fallback for web version
+      return { success: true, path: './configs' };
     }
   }
 }

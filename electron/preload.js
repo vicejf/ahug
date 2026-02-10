@@ -23,4 +23,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   storeClearRecentFiles: () => ipcRenderer.invoke('store:clear-recent-files'),
   storeGetStatistics: () => ipcRenderer.invoke('store:get-statistics'),
   storeSaveStatistics: (stats) => ipcRenderer.invoke('store:save-statistics'),
+  // 配置文件相关方法
+  selectConfigDirectory: () => ipcRenderer.invoke('config:select-directory'),
+  scanConfigFiles: () => ipcRenderer.invoke('config:scan-files'),
+  getFileStats: (filePath) => ipcRenderer.invoke('file:get-stats', filePath),
 });

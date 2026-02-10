@@ -1,0 +1,23 @@
+{
+  "basicInfo": {
+    "billCode": "AUJX",
+    "billName": "测试配置",
+    "module": "",
+    "packageName": "ahu",
+    "bodyCode": "",
+    "headCode": "AUJXHVO",
+    "billType": "single",
+    "author": "flynn chen",
+    "description": ""
+  },
+  "bodyCodeList": [],
+  "globalConfig": {
+    "outputDir": "./output",
+    "sourcePath": "",
+    "author": "Flynn Chen",
+    "syncAfterGenerate": false,
+    "generateClient": true,
+    "generateBusiness": true,
+    "generateMetadata": false
+  }
+}

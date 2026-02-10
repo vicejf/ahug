@@ -1,8 +1,10 @@
-import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, EditOutlined, MinusSquareOutlined, PlusOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, EditOutlined, MinusSquareOutlined, PlusOutlined, PlusSquareOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import type { FieldConfig } from '../types';
+import ImportTemplateModal from './ImportTemplateModal';
+import SaveTemplateModal from './SaveTemplateModal';
 
 const { Option } = Select;
 
@@ -35,6 +37,8 @@ export default function BodyFieldsTable({
   const [fieldCount, setFieldCount] = useState(fields.length);
   const [addBodyCodeModalVisible, setAddBodyCodeModalVisible] = useState(false);
   const [newBodyCode, setNewBodyCode] = useState('');
+  const [importModalOpen, setImportModalOpen] = useState(false);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
 
   useEffect(() => {
     setFieldCount(fields.length);
@@ -119,6 +123,27 @@ export default function BodyFieldsTable({
 
   const handleCancel = () => {
     setEditingKey('');
+  };
+
+  const handleImportFields = (importedFields: FieldConfig[]) => {
+    // Merge imported fields with existing fields, avoiding duplicates
+    const existingNames = new Set(fields.map(f => f.name));
+    const newFields = importedFields.filter(f => !existingNames.has(f.name));
+    
+    if (newFields.length > 0) {
+      onChange([...fields, ...newFields]);
+      message.success(`成功导入 ${newFields.length} 个新字段`);
+    } else {
+      message.info('没有新的字段可以导入');
+    }
+  };
+
+  const handleSaveTemplate = () => {
+    setSaveModalOpen(true);
+  };
+
+  const handleTemplateSaved = () => {
+    // Refresh or update any template-related UI
   };
 
   const handleFieldChange = (index: number, field: keyof FieldConfig, value: unknown) => {
@@ -433,6 +458,22 @@ export default function BodyFieldsTable({
             {currentBodyCode && ` (${currentBodyCode})`}
           </span>
         </Space>
+        <Space>
+          <Button
+            icon={<UploadOutlined />}
+            onClick={() => setImportModalOpen(true)}
+            disabled={disabled}
+          >
+            导入字段
+          </Button>
+          <Button
+            icon={<DownloadOutlined />}
+            onClick={handleSaveTemplate}
+            disabled={disabled || fields.length === 0}
+          >
+            保存模板
+          </Button>
+        </Space>
       </div>
 
       <Table
@@ -443,6 +484,19 @@ export default function BodyFieldsTable({
         scroll={{ x: 1000 }}
         size="small"
         bordered
+      />
+      <ImportTemplateModal
+        open={importModalOpen}
+        onCancel={() => setImportModalOpen(false)}
+        onImport={handleImportFields}
+        category="body"
+      />
+      <SaveTemplateModal
+        open={saveModalOpen}
+        onCancel={() => setSaveModalOpen(false)}
+        onSave={handleTemplateSaved}
+        fields={fields}
+        category="body"
       />
 
       <Modal

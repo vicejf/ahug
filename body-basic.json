@@ -1,0 +1,88 @@
+{
+  "id": "basic-body-template-1",
+  "name": "基础表体字段模板",
+  "type": "basic",
+  "category": "body",
+  "fields": [
+    {
+      "name": "pk_aujx_b",
+      "label": "表体主键",
+      "type": "UFID",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": true,
+      "editable": false,
+      "primaryKey": true,
+      "uiType": "Hidden"
+    },
+    {
+      "name": "pk_aujx",
+      "label": "主表主键",
+      "type": "UFID",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": true,
+      "editable": false,
+      "primaryKey": false,
+      "uiType": "Hidden"
+    },
+    {
+      "name": "rowno",
+      "label": "行号",
+      "type": "Integer",
+      "dbType": "INT",
+      "length": 0,
+      "required": true,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Number"
+    },
+    {
+      "name": "material",
+      "label": "物料",
+      "type": "String",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": false,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Reference"
+    },
+    {
+      "name": "quantity",
+      "label": "数量",
+      "type": "UFDouble",
+      "dbType": "DECIMAL(20,8)",
+      "length": 0,
+      "required": false,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Number"
+    },
+    {
+      "name": "price",
+      "label": "单价",
+      "type": "UFDouble",
+      "dbType": "DECIMAL(20,8)",
+      "length": 0,
+      "required": false,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Number"
+    },
+    {
+      "name": "amount",
+      "label": "金额",
+      "type": "UFDouble",
+      "dbType": "DECIMAL(20,8)",
+      "length": 0,
+      "required": false,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Number"
+    }
+  ],
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "description": "包含NC5标准单据的基础表体字段"
+}

@@ -1,0 +1,52 @@
+{
+  "fields": [
+    {
+      "name": "pk_test",
+      "label": "测试主键",
+      "type": "UFID",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": true,
+      "editable": false,
+      "primaryKey": true,
+      "uiType": "Hidden"
+    },
+    {
+      "name": "test_code",
+      "label": "测试编码",
+      "type": "String",
+      "dbType": "VARCHAR2(50)",
+      "length": 50,
+      "required": true,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Text"
+    },
+    {
+      "name": "test_name",
+      "label": "测试名称",
+      "type": "String",
+      "dbType": "VARCHAR2(100)",
+      "length": 100,
+      "required": false,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Text"
+    },
+    {
+      "name": "test_amount",
+      "label": "测试金额",
+      "type": "UFDouble",
+      "dbType": "DECIMAL(20,8)",
+      "length": 0,
+      "required": false,
+      "editable": true,
+      "primaryKey": false,
+      "uiType": "Number"
+    }
+  ],
+  "metadata": {
+    "tableName": "test_table",
+    "description": "测试表结构"
+  }
+}
