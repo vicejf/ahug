@@ -43,16 +43,39 @@ async function createWindow() {
     },
   });
 
-  // 开发环境加载 Vite 开发服务器
-  const vitePort = await findVitePort();
-  if (vitePort) {
-    const url = `http://localhost:${vitePort}`;
-    console.log('Loading Vite dev server at:', url);
-    mainWindow.loadURL(url);
-    mainWindow.webContents.openDevTools();
+  // --- 核心修改点：使用 app.isPackaged 判断 ---
+  if (!app.isPackaged) {
+    // 开发环境：加载 Vite
+    const vitePort = await findVitePort();
+    if (vitePort) {
+      const url = `http://localhost:${vitePort}`;
+      console.log('Loading Vite dev server at:', url);
+      await mainWindow.loadURL(url);
+      // 只有在开发环境才开启 DevTools
+      mainWindow.webContents.openDevTools();
+    } else {
+      console.error('Vite server not found, falling back to bundled files...');
+      // 即使在开发环境没找到 Vite，也要防止打开 DevTools
+      await mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    }
   } else {
-    // 生产环境加载打包后的文件
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    // 生产环境：直接加载打包后的文件 (绝对路径)
+    await mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    
+    // --- 强化防护：彻底禁用右键菜单和开发者工具 ---
+    // 禁用右键菜单 (防止通过右键检查打开)
+    mainWindow.webContents.setContextMenu(false);
+    
+    // 监听并强制关闭任何试图打开的 DevTools
+    mainWindow.webContents.on('devtools-opened', () => {
+      console.warn('DevTools was opened in production and has been closed.');
+      mainWindow.webContents.closeDevTools();
+    });
+    
+    // 额外防护：如果有人通过代码聚焦 DevTools，也强制关闭
+    mainWindow.webContents.on('devtools-focused', () => {
+      mainWindow.webContents.closeDevTools();
+    });
   }
 }
 

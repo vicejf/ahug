@@ -71,3 +71,5 @@ export default defineConfig([
   },
 ])
 ```
+## package
+npm run electron:build

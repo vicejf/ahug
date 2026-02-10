@@ -31,9 +31,25 @@
     "asar": true,
     "win": {
       "target": [
-        "zip"
+        "nsis"
       ],
-      "artifactName": "${productName}_${version}.${ext}"
+      "artifactName": "${productName}_Setup_${version}.${ext}",
+      "publish": null
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ahug Code Generator",
+      "installerLanguages": [
+        "en_US",
+        "zh_CN"
+      ],
+
+      "deleteAppDataOnUninstall": true
     },
     "linux": {
       "target": [
