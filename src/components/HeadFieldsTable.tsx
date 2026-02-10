@@ -1,5 +1,6 @@
 import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input, InputNumber, message, Popconfirm, Select, Space, Table, Tag } from 'antd';
+import type { ColumnType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import type { FieldConfig } from '../types';
 
@@ -97,7 +98,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
     setEditingKey(record.name);
   };
 
-  const handleSave = (_record: FieldConfig) => {
+  const handleSave = () => {
     setEditingKey('');
   };
 
@@ -105,11 +106,11 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
     setEditingKey('');
   };
 
-  const handleFieldChange = (index: number, field: keyof FieldConfig, value: any) => {
+  const handleFieldChange = (index: number, field: keyof FieldConfig, value: unknown) => {
     const newFields = [...fields];
     const updatedField = { ...newFields[index], [field]: value };
 
-    if (field === 'length') {
+    if (field === 'length' && typeof value === 'number') {
       updatedField.dbType = updateDbTypeWithLength(updatedField, value) || '';
     }
 
@@ -140,13 +141,12 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '字段名',
       dataIndex: 'name',
       width: 150,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Input
             defaultValue={text}
-            onPressEnter={() => handleSave(record)}
+            onPressEnter={() => handleSave()}
             onBlur={(e) => handleNameChange(index, e.target.value)}
             autoFocus
           />
@@ -162,13 +162,12 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '中文名',
       dataIndex: 'label',
       width: 120,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Input
             defaultValue={text}
-            onPressEnter={() => handleSave(record)}
+            onPressEnter={() => handleSave()}
             onBlur={(e) => handleFieldChange(index, 'label', e.target.value)}
           />
         ) : (
@@ -180,8 +179,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '字段类型',
       dataIndex: 'type',
       width: 130,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Select
@@ -202,13 +200,12 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '数据库类型',
       dataIndex: 'dbType',
       width: 150,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Input
             defaultValue={text}
-            onPressEnter={() => handleSave(record)}
+            onPressEnter={() => handleSave()}
             onBlur={(e) => handleFieldChange(index, 'dbType', e.target.value)}
           />
         ) : (
@@ -220,8 +217,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '长度',
       dataIndex: 'length',
       width: 100,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: number, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <InputNumber
@@ -239,7 +235,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '必填',
       dataIndex: 'required',
       width: 80,
-      render: (text: any, _record: any, index: number) => (
+      render: (text: boolean, _record: FieldConfig, index: number) => (
         <Checkbox
           checked={text}
           onChange={(e) => handleFieldChange(index, 'required', e.target.checked)}
@@ -251,7 +247,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '可编辑',
       dataIndex: 'editable',
       width: 80,
-      render: (text: any, _record: any, index: number) => (
+      render: (text: boolean, _record: FieldConfig, index: number) => (
         <Checkbox
           checked={text}
           onChange={(e) => handleFieldChange(index, 'editable', e.target.checked)}
@@ -263,7 +259,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: '主键',
       dataIndex: 'primaryKey',
       width: 80,
-      render: (text: any, _record: any, index: number) => (
+      render: (text: boolean, _record: FieldConfig, index: number) => (
         <Checkbox
           checked={text}
           onChange={(e) => handleFieldChange(index, 'primaryKey', e.target.checked)}
@@ -275,8 +271,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       title: 'UI类型',
       dataIndex: 'uiType',
       width: 120,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Select
@@ -302,7 +297,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
       key: 'action',
       width: 180,
       fixed: 'right',
-      render: (_: any, record: FieldConfig, index: number) => (
+      render: (_: unknown, record: FieldConfig, index: number) => (
         <Space size="small">
           {isEditing(record) ? (
             <>
@@ -310,7 +305,7 @@ export default function HeadFieldsTable({ fields, enumConfigs, onChange, disable
                 type="link"
                 size="small"
                 icon={<EditOutlined />}
-                onClick={() => handleSave(record)}
+                onClick={() => handleSave()}
               >
                 保存
               </Button>

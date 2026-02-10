@@ -48,6 +48,7 @@ const BILL_TYPES = [
 ];
 
 export default function ConfigurationEditor() {
+  const [messageApi, messageContextHolder] = message.useMessage();
   const [activeTab, setActiveTab] = useState('1');
   const [form] = Form.useForm();
   const [config, setConfig] = useState<BillConfigData>(ConfigManager.clearConfig());
@@ -62,7 +63,10 @@ export default function ConfigurationEditor() {
 
   useEffect(() => {
     if (config.bodyCodeList.length > 0 && !currentBodyCode) {
-      setCurrentBodyCode(config.bodyCodeList[0]);
+      // 使用 setTimeout 避免在 effect 中直接调用 setState
+      setTimeout(() => {
+        setCurrentBodyCode(config.bodyCodeList[0]);
+      }, 0);
     }
   }, [config.bodyCodeList, currentBodyCode]);
 
@@ -131,7 +135,7 @@ export default function ConfigurationEditor() {
     }
 
     if (errors.length > 0) {
-      message.error('验证失败：\n' + errors.join('\n'));
+      messageApi.error('验证失败：\n' + errors.join('\n'));
       return false;
     }
 
@@ -155,27 +159,48 @@ export default function ConfigurationEditor() {
       setCurrentBodyCode('');
       ConfigManager.setCurrentConfigPath(null);
       setIsModified(false);
-      message.success('已新建配置');
+      messageApi.success('已新建配置');
     });
   };
 
   const handleOpenConfig = async () => {
-    checkUnsavedChanges(async () => {
-      const result = await FileService.openFile();
-      if (result.success && result.filePath) {
-        const loadResult = await ConfigFileService.loadConfig(result.filePath);
-        if (loadResult.success && loadResult.config) {
-          setConfig(loadResult.config);
-          form.setFieldsValue(loadResult.config.basicInfo);
-          setCurrentBodyCode(loadResult.config.bodyCodeList[0] || '');
-          ConfigManager.setCurrentConfigPath(result.filePath);
-          ConfigManager.addToRecentFiles(result.filePath);
-          setIsModified(false);
-          message.success(`已加载: ${result.filePath}`);
-        } else {
-          message.error('加载配置失败: ' + (loadResult.error || '未知错误'));
+    console.log('handleOpenConfig called');
+    checkUnsavedChanges(() => {
+      console.log('Inside checkUnsavedChanges callback');
+      // 将异步操作包装在一个立即执行的异步函数中
+      (async () => {
+        try {
+          console.log('Calling FileService.openFile()');
+          const result = await FileService.openFile();
+          console.log('FileService.openFile() result:', result);
+          
+          if (result.success && result.filePath) {
+            console.log('Loading config from:', result.filePath);
+            const loadResult = await ConfigFileService.loadConfig(result.filePath);
+            console.log('ConfigFileService.loadConfig result:', loadResult);
+            
+            if (loadResult.success && loadResult.config) {
+              setConfig(loadResult.config);
+              form.setFieldsValue(loadResult.config.basicInfo);
+              setCurrentBodyCode(loadResult.config.bodyCodeList[0] || '');
+              ConfigManager.setCurrentConfigPath(result.filePath);
+              ConfigManager.addToRecentFiles(result.filePath);
+              setIsModified(false);
+              messageApi.success(`已加载: ${result.filePath}`);
+            } else {
+              messageApi.error('加载配置失败: ' + (loadResult.error || '未知错误'));
+            }
+          } else {
+            console.log('File selection cancelled or failed');
+            if (result.error) {
+              messageApi.error('打开文件失败: ' + result.error);
+            }
+          }
+        } catch (error) {
+          console.error('Error in handleOpenConfig:', error);
+          messageApi.error('操作失败: ' + (error instanceof Error ? error.message : '未知错误'));
         }
-      }
+      })();
     });
   };
 
@@ -194,9 +219,9 @@ export default function ConfigurationEditor() {
       ConfigManager.addToRecentFiles(saveResult.filePath);
       ConfigManager.incrementConfigCount();
       setIsModified(false);
-      message.success(`已保存: ${saveResult.filePath}`);
+      messageApi.success(`已保存: ${saveResult.filePath}`);
     } else {
-      message.error('保存失败: ' + (saveResult.error || '未知错误'));
+      messageApi.error('保存失败: ' + (saveResult.error || '未知错误'));
     }
   };
 
@@ -216,9 +241,9 @@ export default function ConfigurationEditor() {
         ConfigManager.addToRecentFiles(saveResult.filePath);
         ConfigManager.incrementConfigCount();
         setIsModified(false);
-        message.success(`已保存: ${saveResult.filePath}`);
+        messageApi.success(`已保存: ${saveResult.filePath}`);
       } else {
-        message.error('保存失败: ' + (saveResult.error || '未知错误'));
+        messageApi.error('保存失败: ' + (saveResult.error || '未知错误'));
       }
     }
   };
@@ -504,6 +529,7 @@ export default function ConfigurationEditor() {
         }
       }}
     >
+      {messageContextHolder}
       <Layout style={{ minHeight: '100vh', background: '#f5f7fa' }}>
         {/* Header */}
         <Header
@@ -540,7 +566,7 @@ export default function ConfigurationEditor() {
               </div>
               <div>
                 <Title level={4} style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>
-                  配置编辑器
+                  单据配置
                   {isModified && (
                     <Badge
                       status="processing"

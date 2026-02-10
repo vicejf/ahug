@@ -1,5 +1,6 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Input, Popconfirm, Row, Space, Table, Typography, message } from 'antd';
+import type { ColumnType } from 'antd/es/table';
 import { useState } from 'react';
 import type { EnumConfig, EnumItem } from '../types';
 
@@ -143,7 +144,7 @@ export default function EnumConfigTable({ enumConfigs, onChange, disabled }: Enu
       title: '枚举名称',
       dataIndex: 'name',
       width: 120,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, _record: EnumConfig, index: number) => {
         const isEditing = editingEnumIndex === index;
         return isEditing ? (
           <Input
@@ -161,7 +162,7 @@ export default function EnumConfigTable({ enumConfigs, onChange, disabled }: Enu
       title: '显示名称',
       dataIndex: 'displayName',
       width: 150,
-      render: (text: any, _record: any, index: number) => {
+      render: (text: string, _record: EnumConfig, index: number) => {
         const isEditing = editingEnumIndex === index;
         return isEditing ? (
           <Input
@@ -178,7 +179,7 @@ export default function EnumConfigTable({ enumConfigs, onChange, disabled }: Enu
       title: '类名',
       dataIndex: 'className',
       width: 150,
-      render: (text: any, _record: any, index: number) => {
+      render: (text: string, _record: EnumConfig, index: number) => {
         const isEditing = editingEnumIndex === index;
         return isEditing ? (
           <Input
@@ -201,7 +202,7 @@ export default function EnumConfigTable({ enumConfigs, onChange, disabled }: Enu
       title: '操作',
       key: 'action',
       width: 150,
-      render: (_: any, record: EnumConfig, index: number) => (
+      render: (_: unknown, _record: EnumConfig, index: number) => (
         <Space size="small">
           {editingEnumIndex === index ? (
             <>
@@ -262,7 +263,7 @@ export default function EnumConfigTable({ enumConfigs, onChange, disabled }: Enu
       title: '显示文本',
       dataIndex: 'display',
       width: 150,
-      render: (text: any, _record: any, index: number) => {
+      render: (text: string, _record: EnumItem, index: number) => {
         const isEditing = editingItemIndex === index;
         return isEditing ? (
           <Input
@@ -280,7 +281,7 @@ export default function EnumConfigTable({ enumConfigs, onChange, disabled }: Enu
       title: '值',
       dataIndex: 'value',
       width: 120,
-      render: (text: any, _record: any, index: number) => {
+      render: (text: string, _record: EnumItem, index: number) => {
         const isEditing = editingItemIndex === index;
         return isEditing ? (
           <Input
@@ -297,7 +298,7 @@ export default function EnumConfigTable({ enumConfigs, onChange, disabled }: Enu
       title: '操作',
       key: 'action',
       width: 100,
-      render: (_: any, record: EnumItem, index: number) => (
+      render: (_: unknown, _record: EnumItem, index: number) => (
         <Space size="small">
           {editingItemIndex === index ? (
             <>

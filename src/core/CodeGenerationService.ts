@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import CodeGenerator from './generators/CodeGenerator';
+import CodeGenerator from './generators/CodeGenerator.js';
 import type { BillConfig } from './models';
 
 export class CodeGenerationService {

@@ -49,6 +49,19 @@ declare global {
         valid: boolean;
         errors: string[];
       }>;
+      // Store operations
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      storeGet: (key: string, defaultValue?: any) => Promise<any>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      storeSet: (key: string, value: any) => Promise<void>;
+      storeDelete: (key: string) => Promise<void>;
+      storeHas: (key: string) => Promise<boolean>;
+      storeClear: () => Promise<void>;
+      storeGetRecentFiles: () => Promise<Array<{ name: string; path: string; lastModified: string }>>;
+      storeAddToRecentFiles: (file: { name: string; path: string; lastModified: string }) => Promise<void>;
+      storeClearRecentFiles: () => Promise<void>;
+      storeGetStatistics: () => Promise<{ configFiles: number; generationCount: number; lastGenerated: string }>;
+      storeSaveStatistics: (stats: { configFiles: number; generationCount: number; lastGenerated: string }) => Promise<void>;
     };
   }
 }

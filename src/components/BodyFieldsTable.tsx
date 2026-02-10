@@ -1,5 +1,6 @@
 import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, EditOutlined, MinusSquareOutlined, PlusOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import type { FieldConfig } from '../types';
 
@@ -49,7 +50,7 @@ export default function BodyFieldsTable({
     return options;
   };
 
-  const updateDbTypeWithLength = (field: FieldConfig, newLength: number) => {
+  const updateDbTypeWithLength = (field: FieldConfig, newLength: number): string | undefined => {
     const currentDbType = field.dbType;
     if (!currentDbType) return;
 
@@ -112,7 +113,7 @@ export default function BodyFieldsTable({
     setEditingKey(record.name);
   };
 
-  const handleSave = (record: FieldConfig) => {
+  const handleSave = () => {
     setEditingKey('');
   };
 
@@ -120,12 +121,15 @@ export default function BodyFieldsTable({
     setEditingKey('');
   };
 
-  const handleFieldChange = (index: number, field: keyof FieldConfig, value: any) => {
+  const handleFieldChange = (index: number, field: keyof FieldConfig, value: unknown) => {
     const newFields = [...fields];
     const updatedField = { ...newFields[index], [field]: value };
 
-    if (field === 'length') {
-      updatedField.dbType = updateDbTypeWithLength(updatedField, value);
+    if (field === 'length' && typeof value === 'number') {
+      const newDbType = updateDbTypeWithLength(updatedField, value);
+      if (newDbType) {
+        updatedField.dbType = newDbType;
+      }
     }
 
     newFields[index] = updatedField;
@@ -134,7 +138,6 @@ export default function BodyFieldsTable({
 
   const handleNameChange = (index: number, newName: string) => {
     const newFields = [...fields];
-    const oldName = newFields[index].name;
 
     if (!newName || newName.trim() === '') {
       message.warning('字段名不能为空');
@@ -194,13 +197,12 @@ export default function BodyFieldsTable({
       title: '字段名',
       dataIndex: 'name',
       width: 150,
-      editable: true,
-      render: (text, record, index) => {
-        const editable = isEditing(record);
+      render: (text, _record, index) => {
+        const editable = isEditing(_record);
         return editable ? (
           <Input
             defaultValue={text}
-            onPressEnter={() => handleSave(record)}
+            onPressEnter={() => handleSave()}
             onBlur={(e) => handleNameChange(index, e.target.value)}
             autoFocus
           />
@@ -213,13 +215,12 @@ export default function BodyFieldsTable({
       title: '中文名',
       dataIndex: 'label',
       width: 120,
-      editable: true,
-      render: (text, record, index) => {
-        const editable = isEditing(record);
+      render: (text, _record, index) => {
+        const editable = isEditing(_record);
         return editable ? (
           <Input
             defaultValue={text}
-            onPressEnter={() => handleSave(record)}
+            onPressEnter={() => handleSave()}
             onBlur={(e) => handleFieldChange(index, 'label', e.target.value)}
           />
         ) : (
@@ -231,8 +232,7 @@ export default function BodyFieldsTable({
       title: '字段类型',
       dataIndex: 'type',
       width: 130,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Select
@@ -253,13 +253,12 @@ export default function BodyFieldsTable({
       title: '数据库类型',
       dataIndex: 'dbType',
       width: 150,
-      editable: true,
-      render: (text: any, record: any, index: number) => {
+      render: (text: string, record: FieldConfig, index: number) => {
         const editable = isEditing(record);
         return editable ? (
           <Input
             defaultValue={text}
-            onPressEnter={() => handleSave(record)}
+            onPressEnter={() => handleSave()}
             onBlur={(e) => handleFieldChange(index, 'dbType', e.target.value)}
           />
         ) : (
@@ -271,9 +270,8 @@ export default function BodyFieldsTable({
       title: '长度',
       dataIndex: 'length',
       width: 100,
-      editable: true,
-      render: (text, record, index) => {
-        const editable = isEditing(record);
+      render: (text, _record, index) => {
+        const editable = isEditing(_record);
         return editable ? (
           <InputNumber
             defaultValue={text}
@@ -290,7 +288,7 @@ export default function BodyFieldsTable({
       title: '必填',
       dataIndex: 'required',
       width: 80,
-      render: (text, record, index) => (
+      render: (text, _record, index) => (
         <Checkbox
           checked={text}
           onChange={(e) => handleFieldChange(index, 'required', e.target.checked)}
@@ -302,7 +300,7 @@ export default function BodyFieldsTable({
       title: '可编辑',
       dataIndex: 'editable',
       width: 80,
-      render: (text, record, index) => (
+      render: (text, _record, index) => (
         <Checkbox
           checked={text}
           onChange={(e) => handleFieldChange(index, 'editable', e.target.checked)}
@@ -315,7 +313,7 @@ export default function BodyFieldsTable({
       key: 'action',
       width: 180,
       fixed: 'right',
-      render: (_: any, record: FieldConfig, index: number) => (
+      render: (_: unknown, record: FieldConfig, index: number) => (
         <Space size="small">
           {isEditing(record) ? (
             <>
@@ -323,7 +321,7 @@ export default function BodyFieldsTable({
                 type="link"
                 size="small"
                 icon={<EditOutlined />}
-                onClick={() => handleSave(record)}
+                onClick={() => handleSave()}
               >
                 保存
               </Button>

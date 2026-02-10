@@ -1,7 +1,5 @@
 // Backend service for communicating with Node.js + EJS backend
 
-import '../types/electron';
-
 interface GenerationResult {
   success: boolean;
   duration: number;

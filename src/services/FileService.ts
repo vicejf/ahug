@@ -1,7 +1,5 @@
 // File service for handling file operations through Electron
 
-import '../types/electron';
-
 interface FileResult {
   success: boolean;
   filePath?: string;

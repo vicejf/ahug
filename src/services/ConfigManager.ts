@@ -1,4 +1,5 @@
 import type { BillConfigData } from '../types';
+import StoreService from './StoreService';
 
 interface RecentFile {
   name: string;
@@ -10,13 +11,11 @@ class ConfigManager {
   private currentConfigPath: string | null = null;
   private recentFiles: RecentFile[] = [];
   private isModified: boolean = false;
-  private readonly RECENT_FILES_KEY = 'ahug_recent_files';
-  private readonly STATISTICS_KEY = 'ahug_statistics';
   private readonly MAX_RECENT_FILES = 10;
 
   constructor() {
     this.loadRecentFiles();
-    this.loadStatistics();
+    // statistics 现在由 StoreService 管理，不需要在这里加载
   }
 
   getCurrentConfigPath(): string | null {
@@ -69,66 +68,52 @@ class ConfigManager {
     return parts[parts.length - 1];
   }
 
-  private loadRecentFiles() {
+  private async loadRecentFiles() {
     try {
-      const stored = localStorage.getItem(this.RECENT_FILES_KEY);
-      if (stored) {
-        this.recentFiles = JSON.parse(stored);
-      }
+      this.recentFiles = await StoreService.getRecentFiles();
     } catch (error) {
       console.error('Failed to load recent files:', error);
       this.recentFiles = [];
     }
   }
 
-  private saveRecentFiles() {
+  private async saveRecentFiles() {
     try {
-      localStorage.setItem(this.RECENT_FILES_KEY, JSON.stringify(this.recentFiles));
+      // 逐个添加而不是替换整个数组，这样可以保持正确的顺序和限制
+      for (const file of this.recentFiles) {
+        await StoreService.addToRecentFiles(file);
+      }
+      // 更新本地缓存
+      this.recentFiles = await StoreService.getRecentFiles();
     } catch (error) {
       console.error('Failed to save recent files:', error);
     }
   }
 
-  clearRecentFiles() {
+  async clearRecentFiles() {
+    await StoreService.clearRecentFiles();
     this.recentFiles = [];
-    this.saveRecentFiles();
   }
 
-  loadStatistics() {
-    try {
-      const stored = localStorage.getItem(this.STATISTICS_KEY);
-      if (stored) {
-        return JSON.parse(stored);
-      }
-    } catch (error) {
-      console.error('Failed to load statistics:', error);
-    }
-    return {
-      configFiles: 0,
-      generationCount: 0,
-      lastGenerated: '从未生成'
-    };
+  async loadStatistics() {
+    return await StoreService.getStatistics();
   }
 
-  saveStatistics(stats: any) {
-    try {
-      localStorage.setItem(this.STATISTICS_KEY, JSON.stringify(stats));
-    } catch (error) {
-      console.error('Failed to save statistics:', error);
-    }
+  async saveStatistics(stats: { configFiles: number; generationCount: number; lastGenerated: string }) {
+    await StoreService.saveStatistics(stats);
   }
 
-  incrementGenerationCount() {
-    const stats = this.loadStatistics();
+  async incrementGenerationCount() {
+    const stats = await this.loadStatistics();
     stats.generationCount++;
     stats.lastGenerated = new Date().toLocaleString();
-    this.saveStatistics(stats);
+    await this.saveStatistics(stats);
   }
 
-  incrementConfigCount() {
-    const stats = this.loadStatistics();
+  async incrementConfigCount() {
+    const stats = await this.loadStatistics();
     stats.configFiles++;
-    this.saveStatistics(stats);
+    await this.saveStatistics(stats);
   }
 
   generateDefaultFileName(billCode: string): string {

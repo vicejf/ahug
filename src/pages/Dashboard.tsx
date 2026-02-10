@@ -42,20 +42,20 @@ export default function Dashboard() {
     lastGenerated: '从未生成'
   });
 
-  useEffect(() => {
-    loadRecentFiles();
-    loadStatistics();
-  }, []);
-
   const loadRecentFiles = () => {
     const files = ConfigManager.getRecentFiles();
     setRecentFiles(files.slice(0, 5));
   };
 
-  const loadStatistics = () => {
-    const stats = ConfigManager.loadStatistics();
+  const loadStatistics = async () => {
+    const stats = await ConfigManager.loadStatistics();
     setStatistics(stats);
   };
+
+  useEffect(() => {
+    loadRecentFiles();
+    loadStatistics();
+  }, []);
 
   const quickActions: QuickAction[] = [
     {

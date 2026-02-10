@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist-electron",
+    "rootDir": ".",
+    "strict": true,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": [
+    "electron/**/*.ts",
+    "electron/**/*.js",
+    "src/core/CodeGenerationService.ts",
+    "src/types/electron.d.ts"
+  ]
+}
